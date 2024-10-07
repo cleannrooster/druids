@@ -7,6 +7,7 @@ import com.druids.entity.DruidLightning;
 import com.druids.entity.SoulBombEntity;
 import com.druids.entity.TotemEntity;
 import it.unimi.dsi.fastutil.Function;
+import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
@@ -51,7 +52,6 @@ public class Spells {
         }
     };
     public static Spell spiritBolts(String namespace, String name, Function<CustomSpellHandler.Data,Boolean> handler){
-
         return entry(namespace,name,handler);
     }
     public static final Spell SPIRITBOLTS = spiritBolts(Druids.MODID,"spiritbolts", (data) ->{

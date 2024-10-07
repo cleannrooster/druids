@@ -27,7 +27,7 @@
   "spell.druids.voltaic_burst.description": "{damage_1} Lightning | {damage_2} Soul | {damage_3} Arcane. Developed by forgotten mage whose reach always far exceeded their grasp, this spell relies on the human desire for power to allow the user to lay waste to wherever they walk, getting stronger as they continue to cast the spell.",
 
   "spell.druids.spiritbolts.name": "Spirit Bolts",
-  "spell.druids.spiritbolts.description": "Up to {damage_1} Soul, {damage_2} Frost, or {damage_3} Fire DPS. A staple occultist spell that either transforms or magnifies soul energy, and sends it hurling forward many times a second.",
+  "spell.druids.spiritbolts.description": "Up to {damage_1} Soul, {damage_2} Frost, or {damage_3} Fire DPS. A staple occultist spell that either transforms or magnifies soul energy, and sends an elemental mote hurling forward many times a second.",
   "spell.druids.stormcall.name": "Storm Call",
   "spell.druids.stormcall.description": "{damage_1} Lightning | {damage_2} Soul 4 times a second. One day during a drought, the Druids had had enough. They figured the only way to make it rain was to make the gods cry.",
   "spell.druids.soulflare.name": "Soul Flare",
@@ -42,6 +42,6 @@
   "spell.druids.maelstromtotem.description": "{damage_1} Soul | {damage_2} Frost | {damage_3} Fire 4 times a second. An effigy of the everlasting Maelstrom is conjured at a spot of your choosing, submitting the area to the elements.",
 
   "spell.druids.soulfirebastion.name": "Soulfire Bastion",
-  "spell.druids.soulfirebastion.description": "Every acquainted mage knows that you can only reasonably protect the mind or the body at one time. The question is - which, and when. (Toggled buff. Shift while casting to remove the buff)"
+  "spell.druids.soulfirebastion.description": "Every acquainted mage knows that you can only reasonably protect the mind or the body at one time. The question is - which, and when. (Toggled buff. Cast while shifting to remove the buff)"
 
 }
