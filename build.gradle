@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.6-SNAPSHOT'
+	id 'fabric-loom' version '1.7-SNAPSHOT'
 	id 'maven-publish'
 	id "com.github.johnrengelman.shadow" version "7.1.2"
 	id "com.matthewprenger.cursegradle" version "1.4.0"
@@ -55,40 +55,28 @@ repositories {
 loom {
 }
 
-
 dependencies {
-	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modApi "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
-	// modApi "dev.architectury:architectury-fabric:${rootProject.architectury_version_api}"
-
-	// Dependencies
-
-	implementation include("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}")
-
-	modImplementation "mod.azure.azurelib:azurelib-fabric-1.20.1:1.0.29"
-
-	modImplementation("maven.modrinth:spell-power:${project.spell_power_version}-fabric")
-	modImplementation("maven.modrinth:spell-engine:${project.spell_engine_version}-fabric")
-	modImplementation("maven.modrinth:runes:${project.runes_version}-fabric")
-	modImplementation("maven.modrinth:extra-rpg-attributes:${project.extra_spell_attributes_version}-fabric")
-	// Uncomment the following line to enable the deprecated Fabric API modules.
-	// These are included in the Fabric API production distribution and allow you to update your mod to the latest modules at a later more convenient time.
-	modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
-	modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-		exclude(group: "net.fabricmc.fabric-api")
-	}
 	modCompileOnly fileTree(dir: "run/mods", includes: ['*.jar'])
 
-	include(implementation("com.github.LlamaLad7:MixinExtras:${project.mixin_extras_version}"))
-	modImplementation("dev.emi:trinkets:${project.trinkets_version}")
-	// modImplementation "net.fabricmc.fabric-api:fabric-api-deprecated:${project.fabric_version}"
-}
+	// Fabric
+	modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
+	// Dependencies
+	include(implementation("com.github.ZsoltMolnarrr:TinyConfig:${project.tiny_config_version}"))
+	modImplementation("maven.modrinth:structure-pool-api:${project.structure_pool_api_version}")
+	modImplementation("maven.modrinth:runes:${project.runes_version}")
+	modImplementation "mod.azure.azurelib:azurelib-fabric-1.21.1:2.3.19"
+
+	modImplementation("maven.modrinth:spell-engine:${project.spell_engine_version}")
+	modImplementation("maven.modrinth:spell-power:${project.spell_power_version}")
+//    modImplementation(files("run/mods/dev/spell_engine-${project.spell_engine_version}.jar"))
+//    modImplementation(files("run/mods/dev/spell_power-${project.spell_power_version}.jar"))
+	modImplementation("dev.emi:trinkets:${project.trinkets_version}")
+	modImplementation("dev.kosmx.player-anim:player-animation-lib-fabric:${project.player_anim_version}")
+	modImplementation("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}")}
 processResources {
 	inputs.property "version", project.version
 

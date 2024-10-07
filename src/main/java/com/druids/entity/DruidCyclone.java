@@ -1,7 +1,9 @@
 package com.druids.entity;
 
 import com.druids.Druids;
-import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.client.util.RenderUtils;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
@@ -9,7 +11,8 @@ import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -49,6 +52,7 @@ public class DruidCyclone extends Entity implements GeoEntity, Ownable {
         this.noClip = true;
     }
 
+
     public static final TrackedData<Integer> COLOR;
     public static final TrackedData<Integer> OWNER;
 
@@ -59,9 +63,9 @@ public class DruidCyclone extends Entity implements GeoEntity, Ownable {
     }
 
 
-    protected void initDataTracker() {
-        this.dataTracker.startTracking(COLOR, 1);
-        this.dataTracker.startTracking(OWNER, -1);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        builder.add(COLOR,1);
+        builder.add(OWNER,-1);
 
     }
 
@@ -81,7 +85,7 @@ public class DruidCyclone extends Entity implements GeoEntity, Ownable {
                 float g = (float) (-sin(tridentEntity * ((float) Math.PI / 180)) * cos(f * ((float) Math.PI / 180)));
                 float h = (float) -sin(f * ((float) Math.PI / 180));
                 float r = (float) (cos(tridentEntity * ((float) Math.PI / 180)) * cos(f * ((float) Math.PI / 180)));
-                this.setPosition(this.target.getX() + (3D + target.getBoundingBox().getXLength()) * 0.5 * (1-0.25*Math.pow((((double) (this.age % 8) / 8D)-1),2)) * cos((((double) (this.age % 40) / 40D)) * (2D * (double) Math.PI) + (2 * Math.PI * (double) (number % 3) / 3D)), (double) this.target.getY(), this.target.getZ()  + (3D + target.getBoundingBox().getXLength()) * 0.5 * (1-0.25*Math.pow((((double) (this.age % 8) / 8D)-1),2)) * sin((((double) (this.age % 40) / 40D)) * (2 * Math.PI) + (2 * Math.PI * (double) (number % 3) / 3D)));
+                this.setPosition(this.target.getX() + (3D + target.getBoundingBox().getLengthX()) * 0.5 * (1-0.25*Math.pow((((double) (this.age % 8) / 8D)-1),2)) * cos((((double) (this.age % 40) / 40D)) * (2D * (double) Math.PI) + (2 * Math.PI * (double) (number % 3) / 3D)), (double) this.target.getY(), this.target.getZ()  + (3D + target.getBoundingBox().getLengthX()) * 0.5 * (1-0.25*Math.pow((((double) (this.age % 8) / 8D)-1),2)) * sin((((double) (this.age % 40) / 40D)) * (2 * Math.PI) + (2 * Math.PI * (double) (number % 3) / 3D)));
 
 
             }
@@ -102,8 +106,8 @@ public class DruidCyclone extends Entity implements GeoEntity, Ownable {
 
             List<LivingEntity> list = this.getWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox(), Entity::isAlive);
             for (LivingEntity entity : list) {
-                Spell spell = SpellRegistry.getSpell(new Identifier(Druids.MODID, "maelstromtotem"));
-                SpellInfo info = new SpellInfo(spell, new Identifier(Druids.MODID,"maelstromtotem"));
+                Spell spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID, "maelstromtotem"));
+                SpellInfo info = new SpellInfo(spell, Identifier.of(Druids.MODID,"maelstromtotem"));
                 if (spell != null  && this.context != null) {
                     if(TargetHelper.actionAllowed(TargetHelper.TargetingMode.AREA, TargetHelper.Intent.HARMFUL,living,entity) || (this.target != null && this.target == entity)) {
                         SpellHelper.performImpacts(entity.getWorld(), living, entity, this.getOwner(), info,
@@ -124,16 +128,27 @@ public class DruidCyclone extends Entity implements GeoEntity, Ownable {
                 0, this::predicate2)
         );
     }
+
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return factory;
+    }
+
+    @Override
+    public double getTick(Object object) {
+        return RenderUtils.getCurrentTick();
+    }
+
     private <E extends GeoAnimatable> PlayState predicate2(AnimationState<E> event) {
 
             return event.setAndContinue(SPINNING);
     }
     private AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
 
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.factory;
+    public AnimatableInstanceCache getFactory() {
+        return factory;
     }
+
     public void setOwner(@Nullable Entity entity) {
         if (entity != null) {
             this.ownerUuid = entity.getId();

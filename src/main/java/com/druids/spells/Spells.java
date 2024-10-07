@@ -7,12 +7,12 @@ import com.druids.entity.DruidLightning;
 import com.druids.entity.SoulBombEntity;
 import com.druids.entity.TotemEntity;
 import it.unimi.dsi.fastutil.Function;
-import net.minecraft.enchantment.ProtectionEnchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LightningEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.mob.CreeperEntity;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -57,26 +57,26 @@ public class Spells {
     public static final Spell SPIRITBOLTS = spiritBolts(Druids.MODID,"spiritbolts", (data) ->{
         CustomSpellHandler.Data data1 = (CustomSpellHandler.Data) data;
         double total = 0;
-        if(data1.caster().getAttributeValue((SpellSchools.SOUL).attribute)+
-                data1.caster().getAttributeValue((SpellSchools.FIRE).attribute)+
-                        data1.caster().getAttributeValue((SpellSchools.FROST).attribute) > 0){
-            total += data1.caster().getAttributeValue((SpellSchools.SOUL).attribute);
-            total += data1.caster().getAttributeValue((SpellSchools.FIRE).attribute);
-            total += data1.caster().getAttributeValue((SpellSchools.FROST).attribute);
+        if(data1.caster().getAttributeValue((SpellSchools.SOUL).getAttributeEntry())+
+                data1.caster().getAttributeValue((SpellSchools.FIRE).getAttributeEntry())+
+                        data1.caster().getAttributeValue((SpellSchools.FROST).getAttributeEntry()) > 0){
+            total += data1.caster().getAttributeValue((SpellSchools.SOUL).getAttributeEntry());
+            total += data1.caster().getAttributeValue((SpellSchools.FIRE).getAttributeEntry());
+            total += data1.caster().getAttributeValue((SpellSchools.FROST).getAttributeEntry());
         }
         double seed = data1.caster().getRandom().nextDouble()*total;
-        if( seed < data1.caster().getAttributeValue((SpellSchools.SOUL).attribute)){
+        if( seed < data1.caster().getAttributeValue((SpellSchools.SOUL).getAttributeEntry())){
             fireBoltOfType((SpellSchools.SOUL), data1);
 
             return false;
         }
-        if(seed >= data1.caster().getAttributeValue((SpellSchools.SOUL).attribute)
-        && seed < data1.caster().getAttributeValue((SpellSchools.SOUL).attribute) + data1.caster().getAttributeValue((SpellSchools.FIRE).attribute)){
+        if(seed >= data1.caster().getAttributeValue((SpellSchools.SOUL).getAttributeEntry())
+        && seed < data1.caster().getAttributeValue((SpellSchools.SOUL).getAttributeEntry()) + data1.caster().getAttributeValue((SpellSchools.FIRE).getAttributeEntry())){
             fireBoltOfType(SpellSchools.FIRE, data1);
 
             return false;
         }
-        if(seed  >=  data1.caster().getAttributeValue((SpellSchools.SOUL).attribute) + data1.caster().getAttributeValue((SpellSchools.FIRE).attribute)){
+        if(seed  >=  data1.caster().getAttributeValue((SpellSchools.SOUL).getAttributeEntry()) + data1.caster().getAttributeValue((SpellSchools.FIRE).getAttributeEntry())){
             fireBoltOfType((SpellSchools.FROST), data1);
             return false;
         }
@@ -88,26 +88,26 @@ public class Spells {
 
 
         if(school == SpellSchools.FIRE){
-           spell = SpellRegistry.getSpell(new Identifier(Druids.MODID,"firebolts"));
-            spellInfo = new SpellInfo(spell,new Identifier(Druids.MODID,"firebolts"));
-            data.caster().addStatusEffect(new StatusEffectInstance((SpellSchools.FROST).boostEffect,20,2));
-            data.caster().addStatusEffect(new StatusEffectInstance((SpellSchools.SOUL).boostEffect,20,2));
+           spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID,"firebolts"));
+            spellInfo = new SpellInfo(spell,Identifier.of(Druids.MODID,"firebolts"));
+            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.FROST).ownedBoostEffect),20,2));
+            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.SOUL).ownedBoostEffect),20,2));
 
         }
         if(school == SpellSchools.FROST){
-            spell = SpellRegistry.getSpell(new Identifier(Druids.MODID,"coldbolts"));
-            spellInfo = new SpellInfo(spell,new Identifier(Druids.MODID,"coldbolts"));
-            data.caster().addStatusEffect(new StatusEffectInstance((SpellSchools.FIRE).boostEffect,20,2));
+            spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID,"coldbolts"));
+            spellInfo = new SpellInfo(spell,Identifier.of(Druids.MODID,"coldbolts"));
+            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.FIRE).ownedBoostEffect),20,2));
 
-            data.caster().addStatusEffect(new StatusEffectInstance((SpellSchools.SOUL).boostEffect,20,2));
+            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.SOUL).ownedBoostEffect),20,2));
 
         }
         if(school == SpellSchools.SOUL){
-            spell = SpellRegistry.getSpell(new Identifier(Druids.MODID,"necrobolts"));
-            data.caster().addStatusEffect(new StatusEffectInstance((SpellSchools.FROST).boostEffect,20,2));
-            data.caster().addStatusEffect(new StatusEffectInstance((SpellSchools.FIRE).boostEffect,20,2));
+            spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID,"necrobolts"));
+            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.FROST).ownedBoostEffect),20,2));
+            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.FIRE).ownedBoostEffect),20,2));
 
-            spellInfo = new SpellInfo(spell,new Identifier(Druids.MODID,"necrobolts"));
+            spellInfo = new SpellInfo(spell,Identifier.of(Druids.MODID,"necrobolts"));
         }
 
        if(!data.targets().isEmpty() && spell != null){
@@ -128,7 +128,7 @@ public class Spells {
     }
     public static final Spell MAELSTROMTOTEM = maelstromtotem(Druids.MODID, "maelstromtotem",(data) ->{
         CustomSpellHandler.Data data1 = (CustomSpellHandler.Data) data;
-        BlockHitResult result = data1.caster().getWorld().raycast(new RaycastContext(data1.caster().getEyePos(),data1.caster().getEyePos().add(data1.caster().getRotationVector().multiply(SpellRegistry.getSpell(new Identifier(Druids.MODID,"maelstromtotem")).range)), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE,data1.caster()));
+        BlockHitResult result = data1.caster().getWorld().raycast(new RaycastContext(data1.caster().getEyePos(),data1.caster().getEyePos().add(data1.caster().getRotationVector().multiply(SpellRegistry.getSpell(Identifier.of(Druids.MODID,"maelstromtotem")).range)), RaycastContext.ShapeType.COLLIDER, RaycastContext.FluidHandling.NONE,data1.caster()));
         if(result.getType().equals(HitResult.Type.BLOCK)){
             TotemEntity totem = new TotemEntity(Druids.TOTEM,data1.caster().getWorld());
             totem.setOwner(data1.caster());
@@ -152,43 +152,6 @@ public class Spells {
     public static final Spell SOULFIREBASTION = soulFireBastion(Druids.MODID,"soulfirebastion", (data) ->{
         CustomSpellHandler.Data data1 = (CustomSpellHandler.Data) data;
 
-        if(data1.caster().hasStatusEffect(Druids.CLEANSING)){
-            if((int)data1.caster().getHealth()/2 > 0 &&  (SpellSchools.FIRE).boostEffect !=  null)
-                data1.caster().addStatusEffect(new StatusEffectInstance((SpellSchools.FIRE).boostEffect,40,-1+(int)data1.caster().getHealth()/2));
-            SpellHelper.performSpell(data1.caster().getWorld(),data1.caster(),new Identifier(Druids.MODID,"firenova"),((CustomSpellHandler.Data) data).targets(),((CustomSpellHandler.Data) data).action(),((CustomSpellHandler.Data) data).progress());
-            data1.caster().removeStatusEffect(Druids.CLEANSING);
-            if(data1.caster().isSneaking()){
-                return true;
-
-            }
-            data1.caster().addStatusEffect(new StatusEffectInstance(Druids.ETERNAL,-1,0,false,false));
-            return true;
-
-        }
-        if(data1.caster().hasStatusEffect(Druids.ETERNAL)){
-            if((int)data1.caster().getAbsorptionAmount()/2 > 0 &&(SpellSchools.SOUL).boostEffect != null)
-                data1.caster().addStatusEffect(new StatusEffectInstance((SpellSchools.SOUL).boostEffect,40,-1+(int)data1.caster().getAbsorptionAmount()/2));
-
-            SpellHelper.performSpell(data1.caster().getWorld(),data1.caster(),new Identifier(Druids.MODID,"necronova"),((CustomSpellHandler.Data) data).targets(),((CustomSpellHandler.Data) data).action(),((CustomSpellHandler.Data) data).progress());
-
-            data1.caster().removeStatusEffect(Druids.ETERNAL);
-            if(data1.caster().isSneaking()){
-                return true;
-
-            }
-            data1.caster().addStatusEffect(new StatusEffectInstance(Druids.CLEANSING,-1,0,false,false));
-            return true;
-
-        }
-        if((int)data1.caster().getHealth()/2 > 0 && (SpellSchools.FIRE).boostEffect != null)
-            data1.caster().addStatusEffect(new StatusEffectInstance((SpellSchools.FIRE).boostEffect,40,-1+(int)data1.caster().getHealth()/2));
-        SpellHelper.performSpell(data1.caster().getWorld(),data1.caster(),new Identifier(Druids.MODID,"firenova"),((CustomSpellHandler.Data) data).targets(),((CustomSpellHandler.Data) data).action(),((CustomSpellHandler.Data) data).progress());
-        if(data1.caster().isSneaking()){
-            return true;
-
-        }
-        data1.caster().addStatusEffect(new StatusEffectInstance(Druids.ETERNAL,-1,0,false,false));
-
         return true;
     });
     public static Spell lightningBlast(String namespace, String name, Function<CustomSpellHandler.Data,Boolean> handler){
@@ -205,8 +168,8 @@ public class Spells {
                 creeper.onStruckByLightning(world,new LightningEntity(EntityType.LIGHTNING_BOLT,creeper.getWorld()));
             }
             List<Entity> entities = TargetHelper.targetsFromArea(data1.targets().get(0),data1.targets().get(0).getPos(),4,area,target -> TargetHelper.actionAllowed(TargetHelper.TargetingMode.AREA, TargetHelper.Intent.HARMFUL,data1.caster(), target));
-            net.spell_engine.api.spell.Spell spell = SpellRegistry.getSpell(new Identifier(Druids.MODID, "lightningblast"));
-            SpellInfo info = new SpellInfo(spell, new Identifier(Druids.MODID,"lightningblast"));
+            net.spell_engine.api.spell.Spell spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID, "lightningblast"));
+            SpellInfo info = new SpellInfo(spell, Identifier.of(Druids.MODID,"lightningblast"));
 
             SpellHelper.performImpacts(data1.caster().getWorld(), data1.caster(), data1.targets().get(0), data1.caster(), info, data1.impactContext());
             lightning.setOwner(data1.caster());
@@ -243,7 +206,7 @@ public class Spells {
         amethyst.setPosition(data1.caster().getEyePos().add(data1.caster().getRotationVec(1).normalize()));
         amethyst.setVelocity(data1.caster().getRotationVec(1).multiply(1, 1, 1));
         amethyst.setOwner(data1.caster());
-        amethyst.spell = SpellRegistry.getSpell(new Identifier(Druids.MODID,"soulflare"));
+        amethyst.spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID,"soulflare"));
         amethyst.context = data1.impactContext();
         SpellPower.Vulnerability vulnerability = SpellPower.Vulnerability.none;
 
@@ -273,7 +236,7 @@ public class Spells {
 
             }
 
-            amethyst.spell = SpellRegistry.getSpell(new Identifier(Druids.MODID, "chain"));
+            amethyst.spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID, "chain"));
             amethyst.context = data1.impactContext();
             SpellPower.Vulnerability vulnerability = SpellPower.Vulnerability.none;
 
@@ -293,13 +256,7 @@ public class Spells {
     }
     public static final Spell voltaic = SoulFlare(Druids.MODID,"voltaic_burst", (data) ->{
         CustomSpellHandler.Data data1 = (CustomSpellHandler.Data) data;
-        if(data1.caster().hasStatusEffect(Druids.VoltaicBurst)) {
-            ((CustomSpellHandler.Data) data).caster().addStatusEffect(new StatusEffectInstance(Druids.VoltaicBurst,data1.caster().getStatusEffect(Druids.VoltaicBurst).getDuration(),data1.caster().getStatusEffect(Druids.VoltaicBurst).getAmplifier()+1,false,false));
 
-        }
-        else{
-            ((CustomSpellHandler.Data) data).caster().addStatusEffect(new StatusEffectInstance(Druids.VoltaicBurst,(int) ((double)30/(0.01*data1.caster().getAttributeValue(SpellPowerMechanics.HASTE.attribute))),0,false,false));
-        }
 
         return true;
     });
@@ -319,16 +276,16 @@ public class Spells {
     });
     public static void initializeSpells(){
         CustomModels.registerModelIds(List.of(
-                new Identifier(Druids.MODID, "projectile/coldspirit")
+                Identifier.of(Druids.MODID, "projectile/coldspirit")
         ));
         CustomModels.registerModelIds(List.of(
-                new Identifier(Druids.MODID, "projectile/firespirit")
+                Identifier.of(Druids.MODID, "projectile/firespirit")
         ));
         CustomModels.registerModelIds(List.of(
-                new Identifier(Druids.MODID, "projectile/necrospirit")
+                Identifier.of(Druids.MODID, "projectile/necrospirit")
         ));
         for(Spell entry : entries){
-            CustomSpellHandler.register(new Identifier(entry.namespace,entry.name),entry.handler);
+            CustomSpellHandler.register(Identifier.of(entry.namespace,entry.name),entry.handler);
         }
     }
 }

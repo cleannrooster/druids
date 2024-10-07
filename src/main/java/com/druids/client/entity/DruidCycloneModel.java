@@ -2,7 +2,7 @@ package com.druids.client.entity;
 
 import com.druids.Druids;
 import com.druids.entity.DruidCyclone;
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import net.minecraft.util.Identifier;
 
 public class DruidCycloneModel<T extends DruidCyclone> extends GeoModel<DruidCyclone> {
@@ -10,27 +10,27 @@ public class DruidCycloneModel<T extends DruidCyclone> extends GeoModel<DruidCyc
     @Override
     public Identifier getModelResource(DruidCyclone reaver) {
 
-        return new Identifier(Druids.MODID,"geo/cyclone.json");
+        return Identifier.of(Druids.MODID,"geo/cyclone.json");
     }
     @Override
     public Identifier getTextureResource(DruidCyclone reaver) {
         if(reaver.getColor() == 0) {
-            return new Identifier(Druids.MODID, "textures/mob/soulwhirlwind.png");
+            return Identifier.of(Druids.MODID, "textures/mob/soulwhirlwind.png");
         }
         else if (reaver.getColor() == 1 || reaver.getColor() == 5){
-            return new Identifier(Druids.MODID, "textures/mob/tempest.png");
+            return Identifier.of(Druids.MODID, "textures/mob/tempest.png");
         }
         else if (reaver.getColor() == 2){
-            return new Identifier(Druids.MODID, "textures/mob/inferno.png");
+            return Identifier.of(Druids.MODID, "textures/mob/inferno.png");
         }
 
-        return new Identifier(Druids.MODID, "textures/mob/whirlwind.png");
+        return Identifier.of(Druids.MODID, "textures/mob/whirlwind.png");
 
     }
 
     @Override
     public Identifier getAnimationResource(DruidCyclone reaver) {
-        return new Identifier(Druids.MODID,"animations/cyclone.animation.json");
+        return Identifier.of(Druids.MODID,"animations/cyclone.animation.json");
     }
 
 }

@@ -1,14 +1,14 @@
 package com.druids.entity;
 
 import com.druids.Druids;
-import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationState;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Ownable;
@@ -47,9 +47,9 @@ public class TotemEntity extends Entity implements GeoEntity, Ownable {
     }
 
 
-    protected void initDataTracker() {
-        this.dataTracker.startTracking(COLOR, 1);
-        this.dataTracker.startTracking(OWNER, -1);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        builder.add(COLOR,1);
+        builder.add(OWNER,-1);
 
     }
 

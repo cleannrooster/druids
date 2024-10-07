@@ -8,6 +8,7 @@ import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.LightningEntityRenderer;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
@@ -20,7 +21,6 @@ public class DruidLightningRenderer extends EntityRenderer<DruidLightning> {
     public DruidLightningRenderer(EntityRendererFactory.Context context) {
         super(context);
     }
-
     public void render(DruidLightning lightningEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
         float[] fs = new float[8];
         float[] gs = new float[8];
@@ -92,16 +92,16 @@ public class DruidLightningRenderer extends EntityRenderer<DruidLightning> {
 
         if (lightningEntity.getOwner() instanceof LivingEntity living) {
             if (lightningEntity.getColor() == 0) {
-                buffer.vertex(matrix, x1 + (shiftEast1 ? offset1 : -offset1), (float)(y * 16), z1 + (shiftSouth1 ? offset1 : -offset1)).color(red, green, blue, 0.7F).next();
-                buffer.vertex(matrix, x2 + (shiftEast1 ? offset2 : -offset2), (float)((y + 1) * 16), z2 + (shiftSouth1 ? offset2 : -offset2)).color(red, green, blue, 0.7F).next();
-                buffer.vertex(matrix, x2 + (shiftEast2 ? offset2 : -offset2), (float)((y + 1) * 16), z2 + (shiftSouth2 ? offset2 : -offset2)).color(red, green, blue, 0.7F).next();
-                buffer.vertex(matrix, x1 + (shiftEast2 ? offset1 : -offset1), (float)(y * 16), z1 + (shiftSouth2 ? offset1 : -offset1)).color(red, green, blue, 0.7F).next();
+                buffer.vertex(matrix, x1 + (shiftEast1 ? offset1 : -offset1), (float)(y * 16), z1 + (shiftSouth1 ? offset1 : -offset1)).color(red, green, blue, 0.7F);
+                buffer.vertex(matrix, x2 + (shiftEast1 ? offset2 : -offset2), (float)((y + 1) * 16), z2 + (shiftSouth1 ? offset2 : -offset2)).color(red, green, blue, 0.7F);
+                buffer.vertex(matrix, x2 + (shiftEast2 ? offset2 : -offset2), (float)((y + 1) * 16), z2 + (shiftSouth2 ? offset2 : -offset2)).color(red, green, blue, 0.7F);
+                buffer.vertex(matrix, x1 + (shiftEast2 ? offset1 : -offset1), (float)(y * 16), z1 + (shiftSouth2 ? offset1 : -offset1)).color(red, green, blue, 0.7F);
             }
             if (lightningEntity.getColor() == 1) {
-                buffer.vertex(matrix, x1 + (shiftEast1 ? offset1 : -offset1), (float)(y * 16), z1 + (shiftSouth1 ? offset1 : -offset1)).color(red, green, blue, 0.3F).next();
-                buffer.vertex(matrix, x2 + (shiftEast1 ? offset2 : -offset2), 0, z2 + (shiftSouth1 ? offset2 : -offset2)).color(red, green, blue, 0.3F).next();
-                buffer.vertex(matrix, x2 + (shiftEast2 ? offset2 : -offset2), 0, z2 + (shiftSouth2 ? offset2 : -offset2)).color(red, green, blue, 0.3F).next();
-                buffer.vertex(matrix, x1 + (shiftEast2 ? offset1 : -offset1), (float)(y * 16), z1 + (shiftSouth2 ? offset1 : -offset1)).color(red, green, blue, 0.3F).next();
+                buffer.vertex(matrix, x1 + (shiftEast1 ? offset1 : -offset1), (float)(y * 16), z1 + (shiftSouth1 ? offset1 : -offset1)).color(red, green, blue, 0.3F);
+                buffer.vertex(matrix, x2 + (shiftEast1 ? offset2 : -offset2), 0, z2 + (shiftSouth1 ? offset2 : -offset2)).color(red, green, blue, 0.3F);
+                buffer.vertex(matrix, x2 + (shiftEast2 ? offset2 : -offset2), 0, z2 + (shiftSouth2 ? offset2 : -offset2)).color(red, green, blue, 0.3F);
+                buffer.vertex(matrix, x1 + (shiftEast2 ? offset1 : -offset1), (float)(y * 16), z1 + (shiftSouth2 ? offset1 : -offset1)).color(red, green, blue, 0.3F);
 
             }
         }

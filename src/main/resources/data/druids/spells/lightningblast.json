@@ -2,7 +2,7 @@
   "school": "LIGHTNING",
   "range": 32,
   "learn": {
-    "tier": 1
+    "tier": 2
   },
   "cast": {
     "duration": 1.5,

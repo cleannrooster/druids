@@ -10,16 +10,21 @@
       "id": "spell_engine:generic_fire_casting",
       "randomness": 0
     },
+    "particles": [
+      {
+        "particle_id": "sculk_soul",
+        "shape": "PIPE",
+        "origin": "FEET",
+        "count": 3.0,
+        "min_speed": 0.05,
+        "max_speed": 0.1
+      }
+    ],
     "animation": "spell_engine:one_handed_projectile_charge"
   },
   "release": {
-    "custom_impact": true,
     "target": {
-      "type": "AREA",
-      "area": {
-        "angle_degrees": 360,
-        "vertical_range_multiplier": 1
-      }
+      "type": "SELF"
     },
     "sound": {
       "id": "entity.illusioner.cast_spell"
@@ -42,10 +47,13 @@
     {
       "school": "FIRE",
       "action": {
-        "type": "DAMAGE",
-        "damage": {
-          "knockback": 1,
-          "spell_power_coefficient": 1.5
+        "type": "STATUS_EFFECT",
+        "status_effect": {
+          "effect_id": "druids:soulfire",
+          "duration": 12,
+          "apply_mode": "SET",
+          "amplifier": 0,
+          "show_particles": false
         }
       },
       "particles": [
@@ -75,6 +83,6 @@
   "cost": {
     "item_id": "runes:soul_stone",
 
-    "cooldown_duration": 8
+    "cooldown_duration": 30
   }
 }

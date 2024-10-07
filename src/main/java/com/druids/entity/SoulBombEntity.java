@@ -131,8 +131,8 @@ public class SoulBombEntity extends ThrownItemEntity {
                         entity.setVelocity(entity.getVelocity().normalize().multiply(this.getVelocity().length(), this.getVelocity().length(), this.getVelocity().length()));
                     }
                     if (this.power != null && this.spell != null && this.context != null && entity.timeUntilRegen <= 10) {
-                        Spell spell = SpellRegistry.getSpell(new Identifier(Druids.MODID, "soulflare"));
-                        SpellInfo info = new SpellInfo(spell, new Identifier(Druids.MODID,"soulflare"));
+                        Spell spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID, "soulflare"));
+                        SpellInfo info = new SpellInfo(spell, Identifier.of(Druids.MODID,"soulflare"));
 
                         SpellHelper.performImpacts(this.getWorld(),player, entity,player, info,context);
                         entity.timeUntilRegen = 20;

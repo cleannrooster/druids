@@ -3,19 +3,22 @@ package com.druids.items;
 import com.druids.client.item.renderer.ShardRenderer;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.animatable.client.RenderProvider;
+import mod.azure.azurelib.common.api.common.animatable.GeoItem;
+import mod.azure.azurelib.common.internal.client.RenderProvider;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.type.AttributeModifiersComponent;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ToolMaterial;
 import net.minecraft.util.Identifier;
@@ -27,17 +30,17 @@ import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class Shard extends StaffItem implements GeoItem {
+public class Shard extends Item implements GeoItem {
 
     public Shard(ToolMaterial material, Settings settings,SpellSchool school) {
-        super(material, settings);
+        super( settings);
         this.school = school;
 
     }
-    SpellSchool school = SpellSchools.getSchool(new Identifier("spell_power", "physical_melee").toString());
+    SpellSchool school = SpellSchools.getSchool(Identifier.of("spell_power", "physical_melee").toString());
 
     @Override
-    public void createRenderer(Consumer<Object> consumer) {
+    public void createRenderer(Consumer<RenderProvider> consumer) {
         consumer.accept(new RenderProvider() {
             private ShardRenderer renderer;
 
@@ -49,27 +52,15 @@ public class Shard extends StaffItem implements GeoItem {
         });
     }
 
-    @Override
-    public Multimap<EntityAttribute, EntityAttributeModifier> getAttributeModifiers(ItemStack stack, EquipmentSlot slot) {
-        ImmutableMultimap.Builder<EntityAttribute, EntityAttributeModifier> builder = ImmutableMultimap.builder();
+   public AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
 
-        var modifiers = super.getAttributeModifiers(stack, slot);
-        builder.putAll(modifiers);
-        if(slot.equals(EquipmentSlot.OFFHAND)){
-            builder.put((SpellSchools.SOUL).attribute, new EntityAttributeModifier(UUID.fromString("38c504e2-d5f9-4128-8349-8049163a895c"), "druids:soul", 4, EntityAttributeModifier.Operation.ADDITION));
-            builder.put(this.school.attribute, new EntityAttributeModifier(UUID.fromString("1255d7d7-3cbf-4204-b031-bfe790c1155f"), "druids:shard", 0.5, EntityAttributeModifier.Operation.MULTIPLY_BASE));
 
-        }
-        return builder.build();
-    }
 
-    private AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
     public static final RawAnimation IDLE = RawAnimation.begin().thenLoop("idle");
 
     public SpellSchool getSchool() {
         return school;
     }
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
 
 
     @Override
@@ -81,13 +72,10 @@ public class Shard extends StaffItem implements GeoItem {
             return PlayState.CONTINUE;})
         );
     }
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
     }
 
-
-    public Supplier<Object> getRenderProvider() {
-        return this.renderProvider;
-    }
 }

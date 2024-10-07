@@ -20,6 +20,8 @@
   "effect.druids.eternalyouth": "Eternal Youth",
   "effect.druids.cleansingfire": "Cleansing Fire",
   "effect.druids.voltaic_burst": "Voltaic Burst",
+  "spell.druids.galvanize.name": "Galvanize",
+  "spell.druids.galvanize.description": "{damage} Lightning Damage | {heal} Healing. Scholars of old believed that life force is directly tied to electricity. This archaic spell vitalizes and invigorates friends while impairing enemies.",
 
   "spell.druids.chain.name": "Galvanic Contagion",
   "spell.druids.chain.description": "{damage_1} Lightning | {damage_2} Soul | {damage_3} Arcane. This contagion of unstable energy quickly bounces between targets, spreading like a plague.",
@@ -42,6 +44,6 @@
   "spell.druids.maelstromtotem.description": "{damage_1} Soul | {damage_2} Frost | {damage_3} Fire 4 times a second. An effigy of the everlasting Maelstrom is conjured at a spot of your choosing, submitting the area to the elements.",
 
   "spell.druids.soulfirebastion.name": "Soulfire Bastion",
-  "spell.druids.soulfirebastion.description": "Every acquainted mage knows that you can only reasonably protect the mind or the body at one time. The question is - which, and when. (Toggled buff. Cast while shifting to remove the buff)"
+  "spell.druids.soulfirebastion.description": "{damage} Fire Damage. Aetherial Druids have learned to project a mind barrier, while retaliating against enemies once the barrier is depleted."
 
 }

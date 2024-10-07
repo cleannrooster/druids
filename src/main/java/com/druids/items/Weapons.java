@@ -1,5 +1,6 @@
 package com.druids.items;
 
+import com.cleannrooster.hexblade.Hexblade;
 import com.druids.Druids;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.Item;
@@ -7,6 +8,7 @@ import net.minecraft.item.Items;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.spell_engine.api.item.ItemConfig;
 import net.spell_engine.api.item.weapon.StaffItem;
@@ -20,11 +22,11 @@ import java.util.function.Supplier;
 public class Weapons {
     public static final ArrayList<Weapon.Entry> entries = new ArrayList<>();
 
-    private static Weapon.Entry entry(String name, Weapon.CustomMaterial material, Item item, ItemConfig.Weapon defaults) {
+    private static Weapon.Entry entry(String name, Weapon.CustomMaterial material, Weapon.Factory item, ItemConfig.Weapon defaults) {
         return entry(null, name, material, item, defaults);
     }
 
-    private static Weapon.Entry entry(String requiredMod, String name, Weapon.CustomMaterial material, Item item, ItemConfig.Weapon defaults) {
+    private static Weapon.Entry entry(String requiredMod, String name, Weapon.CustomMaterial material, Weapon.Factory item, ItemConfig.Weapon defaults) {
         var entry = new Weapon.Entry(Druids.MODID, name, material, item, defaults, null);
         if (entry.isRequiredModInstalled()) {
             entries.add(entry);
@@ -37,7 +39,7 @@ public class Weapons {
     }
 
     private static Supplier<Ingredient> ingredient(String idString, Item fallback) {
-        var id = new Identifier(idString);
+        var id = Identifier.of(idString);
         return () -> {
             var item = Registries.ITEM.get(id);
             var ingredient = item != null ? item : fallback;
@@ -51,17 +53,17 @@ public class Weapons {
     private static final float wandAttackSpeed = -2.4F;
     private static Weapon.Entry wand(String name, Weapon.CustomMaterial material) {
         var settings = new Item.Settings();
-        var item = new StaffItem(material, settings);
-        return entry(name, material, item, new ItemConfig.Weapon(wandAttackDamage, wandAttackSpeed));
+
+        return entry(name, material, StaffItem::new, new ItemConfig.Weapon(wandAttackDamage, wandAttackSpeed));
     }
 
  public static final Weapon.Entry lightningWand = wand("wand_lightning",
             Weapon.CustomMaterial.matching(ToolMaterials.IRON, () -> Ingredient.ofItems(Items.GOLD_INGOT)))
-            .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 2));
+            .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 3));
 
     public static final Weapon.Entry netheriteLightningWand = wand("wand_netherite_lightning",
             Weapon.CustomMaterial.matching(ToolMaterials.NETHERITE, () -> Ingredient.ofItems(Items.NETHERITE_INGOT)))
-            .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 3));
+            .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 4));
 
     // MARK: Staves
 
@@ -74,33 +76,18 @@ public class Weapons {
 
     private static Weapon.Entry staff(String requiredMod, String name, Weapon.CustomMaterial material) {
         var settings = new Item.Settings();
-        var item = new StaffItem(material, settings);
-        return entry(requiredMod, name, material, item, new ItemConfig.Weapon(staffAttackDamage, staffAttackSpeed));
+        return entry(requiredMod, name, material, StaffItem::new, new ItemConfig.Weapon(staffAttackDamage, staffAttackSpeed));
     }
 
          public static final Weapon.Entry lightningStaff = staff("staff_lightning",
             Weapon.CustomMaterial.matching(ToolMaterials.DIAMOND, () -> Ingredient.ofItems(Items.GOLD_INGOT)))
-            .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 4));
+            .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 5));
 
     public static final Weapon.Entry netheriteLightningStaff = staff("staff_netherite_lightning",
             Weapon.CustomMaterial.matching(ToolMaterials.NETHERITE, () -> Ingredient.ofItems(Items.NETHERITE_INGOT)))
-            .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 5));
+            .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 6));
 
     public static void register(Map<String, ItemConfig.Weapon> configs) {
-        if (FabricLoader.getInstance().isModLoaded("betterend")) {
-            staff("betterend", "staff_crystal_lightning",
-                    Weapon.CustomMaterial.matching(ToolMaterials.NETHERITE, ingredient("betternether:amber_gem")))
-                    .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 6));
-        }
-        /*if (FabricLoader.getInstance().isModLoaded("betterend")) {
-            staff("betterend", "staff_crystal_arcane",
-                    Weapon.CustomMaterial.matching(ToolMaterials.NETHERITE, ingredient("betterend:aeternium_ingot")))
-                    .attribute(ItemConfig.Attribute.bonus(SpellAttributes.POWER.get(MagicSchool.ARCANE), 6));
-            staff("betterend", "staff_smaragdant_frost",
-                    Weapon.CustomMaterial.matching(ToolMaterials.NETHERITE, ingredient("betterend:aeternium_ingot")))
-                    .attribute(ItemConfig.Attribute.bonus(SpellAttributes.POWER.get(MagicSchool.FROST), 6));
-        }*/
-
-        Weapon.register(configs, entries, ItemsInit.KEY);
+        Weapon.register(configs, entries, RegistryKey.of(Registries.ITEM_GROUP.getKey(),Identifier.of(Druids.MODID,"generic")));
     }
 }

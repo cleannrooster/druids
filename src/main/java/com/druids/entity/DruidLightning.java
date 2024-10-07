@@ -53,15 +53,16 @@ public class DruidLightning extends Entity implements Ownable {
     public static final TrackedData<Integer> OWNER;
 
     static {
-        COLOR = DataTracker.registerData(DruidCyclone.class, TrackedDataHandlerRegistry.INTEGER);
-        OWNER = DataTracker.registerData(DruidCyclone.class, TrackedDataHandlerRegistry.INTEGER);
+        COLOR = DataTracker.registerData(DruidLightning.class, TrackedDataHandlerRegistry.INTEGER);
+        OWNER = DataTracker.registerData(DruidLightning.class, TrackedDataHandlerRegistry.INTEGER);
 
     }
 
 
-    protected void initDataTracker() {
-        this.dataTracker.startTracking(COLOR, 1);
-        this.dataTracker.startTracking(OWNER, -1);
+    protected void initDataTracker(DataTracker.Builder builder) {
+
+        builder.add(COLOR,1);
+        builder.add(OWNER,-1);
 
     }
     protected void writeCustomDataToNbt(NbtCompound nbt) {
@@ -155,15 +156,15 @@ public class DruidLightning extends Entity implements Ownable {
             this.seed = this.random.nextLong();
         }
         if(this.getColor() == 1 && this.getOwner() instanceof LivingEntity && this.age % 5 == 0 && !this.getWorld().isClient()){
-            for(Entity living : TargetHelper.targetsFromArea(this,SpellRegistry.getSpell(new Identifier(Druids.MODID,
-                    "stormcall")).range, SpellRegistry.getSpell(new Identifier(Druids.MODID,
+            for(Entity living : TargetHelper.targetsFromArea(this,SpellRegistry.getSpell(Identifier.of(Druids.MODID,
+                    "stormcall")).range, SpellRegistry.getSpell(Identifier.of(Druids.MODID,
                     "stormcall")).release.target.area,(target) -> TargetHelper.actionAllowed(TargetHelper.TargetingMode.AREA, TargetHelper.Intent.HARMFUL,(LivingEntity)this.getOwner(),
                     target))){
                 if(living instanceof CreeperEntity creeper && creeper.getWorld() instanceof ServerWorld world && Druids.config.charge_creepers){
                     creeper.onStruckByLightning(world,new LightningEntity(EntityType.LIGHTNING_BOLT,creeper.getWorld()));
                 }
-                Spell spell = SpellRegistry.getSpell(new Identifier(Druids.MODID, "stormcall"));
-                SpellInfo info = new SpellInfo(spell, new Identifier(Druids.MODID,"stormcall"));
+                Spell spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID, "stormcall"));
+                SpellInfo info = new SpellInfo(spell, Identifier.of(Druids.MODID,"stormcall"));
 
                 SpellHelper.performImpacts(this.getWorld(), (LivingEntity) this.getOwner(), living, this.getOwner(),
                         info, new SpellHelper.ImpactContext());
@@ -171,7 +172,7 @@ public class DruidLightning extends Entity implements Ownable {
         }
         if(this.getWorld().isClient  && this.getColor() == 1) {
             int NUM_POINTS = 100;
-            double radius = SpellRegistry.getSpell(new Identifier(Druids.MODID,
+            double radius = SpellRegistry.getSpell(Identifier.of(Druids.MODID,
                     "stormcall")).range;
             for (int i = 0; i < NUM_POINTS; ++i) {
                 final double angle = Math.toRadians(((double) i / NUM_POINTS) * 360d);

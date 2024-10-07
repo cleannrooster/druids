@@ -1,8 +1,8 @@
 package com.druids.client.entity;
 
 import com.druids.entity.DruidCyclone;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import mod.azure.azurelib.common.api.client.renderer.GeoEntityRenderer;
+import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -16,7 +16,7 @@ public class DruidCycloneRenderer<T extends DruidCyclone> extends GeoEntityRende
     }
 
     @Override
-    public void preRender(MatrixStack poseStack, DruidCyclone animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(MatrixStack poseStack, DruidCyclone animatable, BakedGeoModel model, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
 
                 this.scaleWidth = 2 * 1.75F;
                 this.scaleHeight = 2 * 1.5F;
@@ -25,7 +25,7 @@ public class DruidCycloneRenderer<T extends DruidCyclone> extends GeoEntityRende
 
 
 
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, red, green, blue, alpha);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
     }
 
 }

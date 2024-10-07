@@ -46,18 +46,21 @@ public class ChainLightning extends ThrownItemEntity {
     public ChainLightning(EntityType<? extends ThrownItemEntity> entityType, World level) {
         super(entityType, level);
         this.setNoGravity(true);
+        this.setInvisible(true);
         this.noClip = true;
     }
     public ChainLightning(EntityType<? extends ThrownItemEntity> entityType, World level, ChainList list) {
         super(entityType, level);
         this.setNoGravity(true);
+        this.setInvisible(true);
+
         this.noClip = true;
         this.list = list;
     }
 
     @Override
     protected Item getDefaultItem() {
-        return Items.AIR;
+        return Items.REDSTONE_BLOCK;
     }
 
     public ChainLightning(EntityType<? extends ThrownItemEntity> entityType, World level, PlayerEntity player) {
@@ -72,8 +75,13 @@ public class ChainLightning extends ThrownItemEntity {
     }
 
     @Override
+    public boolean isInvisible() {
+        return true;
+    }
+
+    @Override
     public ItemStack getStack() {
-        return Items.AIR.getDefaultStack();
+        return Items.REDSTONE_BLOCK.getDefaultStack();
     }
 
     @Override
@@ -123,10 +131,10 @@ public class ChainLightning extends ThrownItemEntity {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         if(this.getOwner() != null && this.getOwner().isAlive() && this.target != null) {
-            Vec3d pos = this.getOwner().getPos().add(0, this.getOwner().getBoundingBox().getYLength() / 2, 0);
+            Vec3d pos = this.getOwner().getPos().add(0, this.getOwner().getBoundingBox().getLengthY() / 2, 0);
 
             for (int i = 0; i < 60; i++) {
-                Vec3d pos2 = pos.add(entityHitResult.getEntity().getPos().add(0, this.getBoundingBox().getYLength() / 2, 0).subtract(pos).multiply((double) i / 15));
+                Vec3d pos2 = pos.add(entityHitResult.getEntity().getPos().add(0, this.getBoundingBox().getLengthY() / 2, 0).subtract(pos).multiply((double) i / 15));
                 if (this.getWorld() instanceof ServerWorld serverWorld) {
                     for (ServerPlayerEntity player : PlayerLookup.tracking(this)) {
                         //serverWorld.spawnParticles(player,Particles.snowflake.particleType,true, pos2.x, pos2.y, pos2.z, 1,0, 0, 0,0);
@@ -139,8 +147,8 @@ public class ChainLightning extends ThrownItemEntity {
             if (entityHitResult.getEntity() == this.target && !this.list.listhit.contains(entityHitResult.getEntity()) && this.getOwner() instanceof PlayerEntity player && this.power != null && this.spell != null && this.context != null) {
                 this.list.listhit.add(entityHitResult.getEntity());
 
-                Spell spell = SpellRegistry.getSpell(new Identifier(Druids.MODID, "chain"));
-                SpellInfo info = new SpellInfo(spell, new Identifier(Druids.MODID, "chain"));
+                Spell spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID, "chain"));
+                SpellInfo info = new SpellInfo(spell, Identifier.of(Druids.MODID, "chain"));
 
                 SpellHelper.performImpacts(this.getWorld(), player, entityHitResult.getEntity(), player, info, context);
                 Predicate<Entity> selectionPredicate = (target) -> {
@@ -171,7 +179,7 @@ public class ChainLightning extends ThrownItemEntity {
                         lightning.list.list.add(entity);
                         lightning.setPos(entityHitResult.getEntity().getX(), entityHitResult.getEntity().getBoundingBox().getCenter().getY(), entityHitResult.getEntity().getZ());
                         lightning.setOwner(player);
-                        lightning.spell = SpellRegistry.getSpell(new Identifier(Druids.MODID, "chain"));
+                        lightning.spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID, "chain"));
                         lightning.context = this.context;
                         SpellPower.Vulnerability vulnerability = SpellPower.Vulnerability.none;
 
@@ -179,7 +187,7 @@ public class ChainLightning extends ThrownItemEntity {
                         SpellPower.Result power = SpellPower.getSpellPower(SpellSchools.LIGHTNING, (LivingEntity) this.getOwner());
                         lightning.power = power;
                         lightning.target = entity;
-                        lightning.setVelocity(entity.getPos().subtract(entityHitResult.getEntity().getPos().add(0, entityHitResult.getEntity().getBoundingBox().getYLength() / 2, 0)).normalize());
+                        lightning.setVelocity(entity.getPos().subtract(entityHitResult.getEntity().getPos().add(0, entityHitResult.getEntity().getBoundingBox().getLengthY() / 2, 0)).normalize());
                         lightning.setVelocity(0,1,0);
 
                         ProjectileUtil.setRotationFromVelocity(lightning, 360);

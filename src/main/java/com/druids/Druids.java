@@ -5,7 +5,6 @@ import com.druids.config.ServerConfig;
 import com.druids.config.ServerConfigWrapper;
 import com.druids.effects.CleansingFlame;
 import com.druids.effects.EternalYouth;
-import com.druids.effects.VoltaicBurst;
 import com.druids.entity.*;
 import com.druids.items.Armors.Armors;
 import com.druids.items.ItemsInit;
@@ -21,16 +20,14 @@ import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.spell_engine.api.item.ItemConfig;
 import net.spell_engine.api.loot.LootConfig;
-import net.spell_power.api.SpellPowerMechanics;
-import net.spell_power.api.SpellSchools;
 import net.tinyconfig.ConfigManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,17 +48,8 @@ public class Druids implements ModInitializer {
 
 	public static EntityType<DruidLightning> DRUIDLIGHTNING;
 
-	public static StatusEffect CLEANSING = new CleansingFlame(StatusEffectCategory.BENEFICIAL, 0xff4bdd)
-			.addAttributeModifier(ReabsorptionInit.RECOUP, "33913b46-e7e3-414b-bbe2-664bcbbbb4ef",0.6, EntityAttributeModifier.Operation.MULTIPLY_BASE);
-	public static StatusEffect VoltaicBurst = new VoltaicBurst(StatusEffectCategory.BENEFICIAL, 0xff4bdd)
-			.addAttributeModifier(SpellSchools.LIGHTNING.attribute, "643cb40d-3fd8-473a-adab-7beaac5e639c",0.02, EntityAttributeModifier.Operation.MULTIPLY_BASE)
-			.addAttributeModifier((SpellSchools.ARCANE).attribute, "139e91a3-3026-44ed-b1e5-58b30bd31cb9",0.02, EntityAttributeModifier.Operation.MULTIPLY_BASE)
-			.addAttributeModifier((SpellSchools.SOUL).attribute, "a527f6c6-e910-4c67-a361-a309729826f9",0.02, EntityAttributeModifier.Operation.MULTIPLY_BASE)
-			.addAttributeModifier(SpellPowerMechanics.HASTE.attribute, "74a261d0-2e88-488a-ba5f-5145274d5a44",0.02,EntityAttributeModifier.Operation.MULTIPLY_BASE);
-	
-	public static StatusEffect ETERNAL = new EternalYouth(StatusEffectCategory.BENEFICIAL, 0xff4bdd)
-			.addAttributeModifier(ReabsorptionInit.WARDING, "e481ebc4-6f40-4c58-9dcc-59cc4c98b2eb",20, EntityAttributeModifier.Operation.ADDITION)
-			.addAttributeModifier(EntityAttributes.GENERIC_MAX_HEALTH,"e481ebc4-6f40-4c58-9dcc-59cc4c98b2eb",-0.9,EntityAttributeModifier.Operation.MULTIPLY_TOTAL);
+
+	public static RegistryEntry.Reference<StatusEffect> SOULFIRE;
 	public static ConfigManager<ItemConfig> itemConfig = new ConfigManager<ItemConfig>
 			("items_v1", Default.itemConfig)
 			.builder()
@@ -83,9 +71,10 @@ public class Druids implements ModInitializer {
 		AutoConfig.register(ServerConfigWrapper.class, PartitioningSerializer.wrap(JanksonConfigSerializer::new));
 		config = AutoConfig.getConfigHolder(ServerConfigWrapper.class).getConfig().server;
 
-		Registry.register(Registries.STATUS_EFFECT,new Identifier(MODID,"cleansingfire"),CLEANSING);
-		Registry.register(Registries.STATUS_EFFECT,new Identifier(MODID,"eternalyouth"),ETERNAL);
-		Registry.register(Registries.STATUS_EFFECT,new Identifier(MODID,"voltaic_burst"),VoltaicBurst);
+
+		SOULFIRE = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MODID,"soulfire"), new CleansingFlame(StatusEffectCategory.BENEFICIAL, 0xff4bdd)
+				.addAttributeModifier(ReabsorptionInit.RECOUP, Identifier.of(MODID,"fireshield"),0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE)
+				.addAttributeModifier(ReabsorptionInit.WARDING, Identifier.of(MODID,"soulshield"),8, EntityAttributeModifier.Operation.ADD_VALUE));
 
 		ItemsInit.register();
 		Weapons.register(itemConfig.value.weapons);
@@ -93,7 +82,7 @@ public class Druids implements ModInitializer {
 
 		CYCLONEENTITY = Registry.register(
 				ENTITY_TYPE,
-				new Identifier(MODID, "cycloneentity"),
+				Identifier.of(MODID, "cycloneentity"),
 				FabricEntityTypeBuilder.<DruidCyclone>create(SpawnGroup.MISC, DruidCyclone::new)
 						.dimensions(EntityDimensions.fixed(4F, 2F)) // dimensions in Minecraft units of the render
 						.trackRangeBlocks(128)
@@ -103,7 +92,7 @@ public class Druids implements ModInitializer {
 
 		TOTEM = Registry.register(
 				ENTITY_TYPE,
-				new Identifier(MODID, "totem"),
+				Identifier.of(MODID, "totem"),
 				FabricEntityTypeBuilder.<TotemEntity>create(SpawnGroup.MISC, TotemEntity::new)
 						.dimensions(EntityDimensions.fixed(2F, 2F)) // dimensions in Minecraft units of the render
 						.trackRangeBlocks(128)
@@ -112,7 +101,7 @@ public class Druids implements ModInitializer {
 		);
 		SoulFlare = Registry.register(
 				ENTITY_TYPE,
-				new Identifier(MODID, "soulflare"),
+				Identifier.of(MODID, "soulflare"),
 				FabricEntityTypeBuilder.<SoulBombEntity>create(SpawnGroup.MISC, SoulBombEntity::new)
 						.dimensions(EntityDimensions.fixed(1F, 1F)) // dimensions in Minecraft units of the render
 						.trackRangeBlocks(128)
@@ -121,7 +110,7 @@ public class Druids implements ModInitializer {
 		);
 		ChainLightning = Registry.register(
 				ENTITY_TYPE,
-				new Identifier(MODID, "chainlightning"),
+				Identifier.of(MODID, "chainlightning"),
 				FabricEntityTypeBuilder.<ChainLightning>create(SpawnGroup.MISC, ChainLightning::new)
 						.dimensions(EntityDimensions.fixed(1F, 1F)) // dimensions in Minecraft units of the render
 						.trackRangeBlocks(128)
@@ -130,7 +119,7 @@ public class Druids implements ModInitializer {
 		);
 		DRUIDLIGHTNING = Registry.register(
 				ENTITY_TYPE,
-				new Identifier(MODID, "druidlightning"),
+				Identifier.of(MODID, "druidlightning"),
 				FabricEntityTypeBuilder.<DruidLightning>create(SpawnGroup.MISC, DruidLightning::new)
 						.dimensions(EntityDimensions.fixed(1F, 1F)) // dimensions in Minecraft units of the render
 						.trackRangeBlocks(128)
