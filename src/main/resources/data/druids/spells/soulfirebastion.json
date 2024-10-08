@@ -33,6 +33,7 @@
   },
   "impact": [
     {
+      "school": "FIRE",
       "action": {
         "type": "DAMAGE",
         "damage": {
@@ -45,13 +46,14 @@
       }
     },
     {
-      "school": "FIRE",
+      "school": "SOUL",
       "action": {
         "type": "STATUS_EFFECT",
         "status_effect": {
           "effect_id": "druids:soulfire",
           "duration": 12,
           "apply_mode": "SET",
+          "amplifier_power_multiplier": 0.25,
           "amplifier": 0,
           "show_particles": false
         }

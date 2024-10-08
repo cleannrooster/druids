@@ -7,6 +7,8 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import net.paladins.effect.PriestAbsorptionStatusEffect;
+import net.spell_engine.api.spell.ParticleBatch;
 import net.spell_engine.api.spell.Spell;
 import net.spell_engine.internals.SpellHelper;
 import net.spell_engine.internals.SpellRegistry;
@@ -32,6 +34,7 @@ public class CleansingFlame extends StatusEffect {
             ParticleHelper.sendBatches(entity, spell.cast.particles);
         }
 
+
         return super.applyUpdateEffect(entity, amplifier);
     }
     @Override
@@ -44,5 +47,10 @@ public class CleansingFlame extends StatusEffect {
                     spell.range,spell.release.target.area,entity1 -> TargetHelper.actionAllowed(TargetHelper.TargetingMode.AREA, TargetHelper.Intent.HARMFUL,player,entity1))), SpellCast.Action.RELEASE,1.0F);
         }
         super.onEntityDamage(entity, amplifier, source, amount);
+    }
+    @Override
+    public void onApplied(LivingEntity entity, int amplifier) {
+        super.onApplied(entity, amplifier);
+        entity.setAbsorptionAmount(entity.getAbsorptionAmount()+(amplifier+1)*8);
     }
 }

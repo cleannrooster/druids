@@ -74,7 +74,7 @@ public class Druids implements ModInitializer {
 
 		SOULFIRE = Registry.registerReference(Registries.STATUS_EFFECT,Identifier.of(MODID,"soulfire"), new CleansingFlame(StatusEffectCategory.BENEFICIAL, 0xff4bdd)
 				.addAttributeModifier(ReabsorptionInit.RECOUP, Identifier.of(MODID,"fireshield"),0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_BASE)
-				.addAttributeModifier(ReabsorptionInit.WARDING, Identifier.of(MODID,"soulshield"),8, EntityAttributeModifier.Operation.ADD_VALUE));
+				.addAttributeModifier(ReabsorptionInit.WARDING, Identifier.of(MODID,"soulshield"),4, EntityAttributeModifier.Operation.ADD_VALUE));
 
 		ItemsInit.register();
 		Weapons.register(itemConfig.value.weapons);

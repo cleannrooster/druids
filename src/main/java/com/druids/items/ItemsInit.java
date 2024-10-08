@@ -46,13 +46,13 @@ public class ItemsInit {
 
         ARCANESHARD = registerItem("shard_arcane",new Shard(Weapon.CustomMaterial.matching(ToolMaterials.DIAMOND,
                 () -> Ingredient.ofItems(Items.AMETHYST_SHARD)), new Item.Settings().attributeModifiers(new
-                AttributeModifiersComponent(List.of(new AttributeModifiersComponent.Entry(SpellSchools.FIRE.attributeEntry,
+                AttributeModifiersComponent(List.of(new AttributeModifiersComponent.Entry(SpellSchools.ARCANE.attributeEntry,
                 new EntityAttributeModifier(Identifier.of(MODID,"arcaneshard"),0.15D, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), AttributeModifierSlot.OFFHAND),    new AttributeModifiersComponent.Entry(SpellSchools.SOUL.attributeEntry,
                 new EntityAttributeModifier(Identifier.of(MODID,"arcaneshardsoul"),4D, EntityAttributeModifier.Operation.ADD_VALUE), AttributeModifierSlot.OFFHAND)),true)
         ), SpellSchools.ARCANE));
         FROSTSHARD = registerItem("shard_frost",new Shard(Weapon.CustomMaterial.matching(ToolMaterials.DIAMOND,
                 () -> Ingredient.ofItems(Items.PRISMARINE_CRYSTALS)), new Item.Settings().attributeModifiers(new
-                AttributeModifiersComponent(List.of(new AttributeModifiersComponent.Entry(SpellSchools.FIRE.attributeEntry,
+                AttributeModifiersComponent(List.of(new AttributeModifiersComponent.Entry(SpellSchools.FROST.attributeEntry,
                 new EntityAttributeModifier(Identifier.of(MODID,"frostshard"),0.15D, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), AttributeModifierSlot.OFFHAND),
                 new AttributeModifiersComponent.Entry(SpellSchools.SOUL.attributeEntry,
                         new EntityAttributeModifier(Identifier.of(MODID,"frostshardsoul"),4D, EntityAttributeModifier.Operation.ADD_VALUE), AttributeModifierSlot.OFFHAND)),true)
@@ -65,7 +65,7 @@ public class ItemsInit {
         ), SpellSchools.FIRE));
         LIGHTNINGSHARD = registerItem("shard_lightning",new Shard(Weapon.CustomMaterial.matching(ToolMaterials.DIAMOND,
                 () -> Ingredient.ofItems(Items.WIND_CHARGE)), new Item.Settings().attributeModifiers(new
-                AttributeModifiersComponent(List.of(new AttributeModifiersComponent.Entry(SpellSchools.FIRE.attributeEntry,
+                AttributeModifiersComponent(List.of(new AttributeModifiersComponent.Entry(SpellSchools.LIGHTNING.attributeEntry,
                 new EntityAttributeModifier(Identifier.of(MODID,"lightningshard"),0.15D, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL), AttributeModifierSlot.OFFHAND),    new AttributeModifiersComponent.Entry(SpellSchools.SOUL.attributeEntry,
                 new EntityAttributeModifier(Identifier.of(MODID,"lightningshardsoul"),4D, EntityAttributeModifier.Operation.ADD_VALUE), AttributeModifierSlot.OFFHAND)),true)
         ), SpellSchools.LIGHTNING));

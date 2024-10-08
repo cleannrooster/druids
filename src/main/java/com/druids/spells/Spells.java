@@ -90,22 +90,15 @@ public class Spells {
         if(school == SpellSchools.FIRE){
            spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID,"firebolts"));
             spellInfo = new SpellInfo(spell,Identifier.of(Druids.MODID,"firebolts"));
-            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.FROST).ownedBoostEffect),20,2));
-            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.SOUL).ownedBoostEffect),20,2));
 
         }
         if(school == SpellSchools.FROST){
             spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID,"coldbolts"));
             spellInfo = new SpellInfo(spell,Identifier.of(Druids.MODID,"coldbolts"));
-            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.FIRE).ownedBoostEffect),20,2));
-
-            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.SOUL).ownedBoostEffect),20,2));
 
         }
         if(school == SpellSchools.SOUL){
             spell = SpellRegistry.getSpell(Identifier.of(Druids.MODID,"necrobolts"));
-            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.FROST).ownedBoostEffect),20,2));
-            data.caster().addStatusEffect(new StatusEffectInstance(RegistryEntry.of((SpellSchools.FIRE).ownedBoostEffect),20,2));
 
             spellInfo = new SpellInfo(spell,Identifier.of(Druids.MODID,"necrobolts"));
         }

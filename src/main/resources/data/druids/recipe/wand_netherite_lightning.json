@@ -7,7 +7,7 @@
     "item": "druids:wand_lightning"
   },
   "result": {
-    "item": "druids:wand_netherite_lightning"
+    "id": "druids:wand_netherite_lightning"
   },
   "template": {
     "item": "minecraft:netherite_upgrade_smithing_template"

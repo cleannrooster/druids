@@ -88,6 +88,11 @@ public class Weapons {
             .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 6));
 
     public static void register(Map<String, ItemConfig.Weapon> configs) {
+        if (FabricLoader.getInstance().isModLoaded("betterend")) {
+            staff("betterend", "staff_crystal_lightning",
+                    Weapon.CustomMaterial.matching(ToolMaterials.NETHERITE, ingredient("betternether:amber_gem",Items.NETHERITE_INGOT)))
+                    .attribute(ItemConfig.Attribute.bonus(SpellSchools.LIGHTNING.id, 7));
+        }
         Weapon.register(configs, entries, RegistryKey.of(Registries.ITEM_GROUP.getKey(),Identifier.of(Druids.MODID,"generic")));
     }
 }

@@ -9,7 +9,7 @@
     "duration": 1.5,
     "animation": "spell_engine:one_handed_projectile_charge",
     "sound": {
-      "id": "spell_engine:generic_lightningg_casting",
+      "id": "spell_engine:generic_lightning_casting",
       "randomness": 0
     },
     "particles": [

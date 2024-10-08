@@ -33,7 +33,7 @@
   "spell.druids.stormcall.name": "Storm Call",
   "spell.druids.stormcall.description": "{damage_1} Lightning | {damage_2} Soul 4 times a second. One day during a drought, the Druids had had enough. They figured the only way to make it rain was to make the gods cry.",
   "spell.druids.soulflare.name": "Soul Flare",
-  "spell.druids.soulflare.description": "{damage_1} Soul 2 times a second. Adversaries on the receiving end of this spell have been reported to never return, possibly having been sent hurling miles away.",
+  "spell.druids.soulflare.description": "{damage} Soul 2 times a second. Adversaries on the receiving end of this spell have been reported to never return, possibly having been sent hurling miles away.",
   "spell.druids.tendrils.name": "Storm Surge",
   "spell.druids.tendrils.description": "Channel to smite enemies in front of you, having less chance to work per enemy over 4 in the area. Deals 1.5x Lightning and Arcane DPS.",
   "spell.druids.lightningblast.name": "Soul Smite",

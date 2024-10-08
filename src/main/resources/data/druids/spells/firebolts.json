@@ -1,6 +1,6 @@
 {
   "school": "FIRE",
-  "range": 64,
+  "range": 16,
   "learn": {
     "tier": 0
   },
