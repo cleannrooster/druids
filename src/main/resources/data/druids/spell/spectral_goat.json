@@ -1,0 +1,65 @@
+{
+  "range": 16.0,
+  "school": "PHYSICAL_MELEE",
+  "tier": 3,
+  "learn": { },
+  "type": "ACTIVE",
+
+  "active": {
+    "cast": {
+      "animation": "druids:twohand_lightning",
+      "duration": 1,
+      "sound": {
+        "id": "spell_engine:generic_arcane_casting",
+        "randomness": 0
+      }
+    }
+  },
+  "target": {
+    "type": "AIM",
+    "aim": {
+      "sticky": true
+    }
+  },
+  "deliver": {
+    "type": "CUSTOM",
+    "custom": {
+      "handler": "druids:spectral_goat"
+    }
+  },
+  "release": {
+    "animation": "spell_engine:one_handed_area_release",
+    "sound": {
+      "id": "spell_engine:generic_soul_release"
+    }  },
+  "impacts": [
+    {
+      "action": {
+        "type": "DAMAGE",
+        "damage": {
+          "knockback": 4,
+          "spell_power_coefficient": 0.1
+        }
+      },
+
+      "particles": [
+        {
+          "particle_id": "cloud",
+          "shape": "SPHERE",
+          "origin": "CENTER",
+          "count": 20.0,
+          "min_speed": 0.5,
+          "max_speed": 0.9
+        }
+      ],
+      "sound": {
+        "id": "entity.iron_golem.hurt"
+      }
+    }
+  ],
+  "cost": {
+    "cooldown": {
+      "duration": 12
+    }
+  }
+}

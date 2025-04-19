@@ -1,0 +1,60 @@
+{
+  "range": 4.0,
+  "school": "PHYSICAL_MELEE",
+  "tier": 2,
+  "learn": { },
+  "type": "ACTIVE",
+
+  "active": {
+    "cast": {
+      "duration": 0
+    }
+  },
+  "target": {
+    "type": "AIM",
+    "aim": {
+      "sticky": false
+    }
+  },
+  "deliver": {
+    "type": "CUSTOM",
+    "custom": {
+      "handler": "druids:ancestral_totem"
+    }
+  },
+  "release": {
+    "animation": "spell_engine:one_handed_projectile_release",
+    "sound": {
+      "id": "spell_engine:generic_soul_release"
+    }  },
+  "impacts": [
+    {
+      "action": {
+        "type": "DAMAGE",
+        "damage": {
+          "knockback": 1,
+          "spell_power_coefficient": 1.2
+        }
+      },
+
+      "particles": [
+        {
+          "particle_id": "cloud",
+          "shape": "SPHERE",
+          "origin": "CENTER",
+          "count": 20.0,
+          "min_speed": 0.5,
+          "max_speed": 0.9
+        }
+      ],
+      "sound": {
+        "id": "entity.iron_golem.hurt"
+      }
+    }
+  ],
+  "cost": {
+    "cooldown": {
+      "duration": 4
+    }
+  }
+}

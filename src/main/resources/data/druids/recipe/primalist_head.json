@@ -6,14 +6,11 @@
     },
     "G": {
       "item": "minecraft:leather"
-    },
-    "S": {
-      "item": "minecraft:wither_skeleton_skull"
     }
   },
   "pattern": [
     "GGG",
-    "ASA",
+    "A A",
     "G G"
   ],
   "result": {

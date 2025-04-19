@@ -1,9 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    {
-      "id": "druids:staff_crystal_lightning",
-      "required": false
-    }
-  ]
-}

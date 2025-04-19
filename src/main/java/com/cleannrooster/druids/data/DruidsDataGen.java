@@ -1,0 +1,34 @@
+package com.cleannrooster.druids.data;
+
+
+import com.cleannrooster.druids.items.Armors.Armors;
+import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.registry.RegistryWrapper;
+import net.spell_engine.rpg_series.datagen.RPGSeriesDataGen;
+
+import java.util.concurrent.CompletableFuture;
+
+public class DruidsDataGen implements DataGeneratorEntrypoint {
+    @Override
+    public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
+        FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
+        pack.addProvider(ItemTagGenerator::new);
+
+    }
+
+
+    public static class ItemTagGenerator extends RPGSeriesDataGen.ItemTagGenerator {
+        public ItemTagGenerator(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+            super(output, registriesFuture);
+        }
+
+        @Override
+        protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
+            generateArmorTags(Armors.entries);
+
+        }
+    }
+
+}

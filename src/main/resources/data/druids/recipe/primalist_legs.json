@@ -5,12 +5,12 @@
       "item": "minecraft:leather"
     },
     "S": {
-      "item": "minecraft:wither_skeleton_skull"
+      "item": "minecraft:iron_ingot"
     }
   },
   "pattern": [
-    "GGG",
-    "GSG",
+    "SGS",
+    "G G",
     "G G"
   ],
   "result": {
