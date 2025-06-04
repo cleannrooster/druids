@@ -1,0 +1,54 @@
+{
+  "itemGroup.druids.general": "Друиды Гроз и Духов",
+  "item.druids.shard_frost": "Осколок Души Льда",
+  "item.druids.shard_arcane": "Осколок Души Тайной Магии",
+  "item.druids.shard_fire": "Осколок Души Огня",
+  "item.druids.shard_lightning": "Осколок Души Молнии",
+
+  "item.druids.aetherial_druid_spell_book": "Книга Заклинаний Эфириалов",
+  "item.druids.storm_druid_spell_book": "Книга Заклинаний Духов–Гроз",
+  "item.druids.wand_lightning": "Жезл Молний",
+  "item.druids.wand_netherite_lightning": "Незеритовый Жезл Молний",
+  "item.druids.staff_lightning": "Посох Молний",
+  "item.druids.staff_netherite_lightning": "Незеритовый Посох Молний",
+  "item.druids.staff_crystal_lightning": "Кристальный Посох Молний",
+
+  "item.druids.primalist_head": "Капюшон Воина Стихий",
+  "item.druids.primalist_chest": "Крепления Воина Стихий",
+  "item.druids.primalist_legs": "Пояс Воина Стихий",
+  "item.druids.primalist_feet": "Ботинки Воина Стихий",
+  "effect.druids.eternalyouth": "Вечная Молодость",
+  "effect.druids.cleansingfire": "Огонь Очищения",
+  "effect.druids.voltaic_burst": "Гальванический Выброс",
+
+  "spell.druids.chain.name": "Гальваническая Контаминация",
+  "spell.druids.chain.description": "{damage_1} Молний | {damage_2} Душ | {damage_3} Тайной Магии.\nКонтаминация нестабильной энергии быстро скачет между целями, распространяясь словно чума.",
+  
+  "spell.druids.voltaic_burst.name": "Гальванический Выброс",
+  "spell.druids.voltaic_burst.description": "{damage_1} Молний | {damage_2} Душ | {damage_3} Тайной Магии.\nРазработанное забытым магом, стремления которого всегда превосходили его возможности, — это заклинание опирается о ненасытное стремление человека к силе, позволяя пользователю опустошать всё вокруг, куда бы он ни пошел, становясь сильнее по мере того, как он произносит это заклинание.",
+
+  "spell.druids.spiritbolts.name": "Молнии Духов",
+  "spell.druids.spiritbolts.description": "Случайно наносит до {damage_1}/{damage_2}/{damage_3} урона Душ/Льда/Огня (соответственно) в Секунду.\nГлавное оккультное заклинание, которое либо преобразует, либо увеличивает энергию души, и посылает частицу стихии, вьющуюся впереди, множество раз в секунду.",
+
+  "spell.druids.stormcall.name": "Зов Бури",
+  "spell.druids.stormcall.description": "{damage_1} Молний | {damage_2} Душ 4 раза в секунду.\nОднажды, во время засухи, у Друидов кончилось терпение. Они выяснили, что единственный способ вызвать дождь — заставить богов плакать.",
+
+  "spell.druids.soulflare.name": "Вспышка Душ",
+  "spell.druids.soulflare.description": "{damage_1} урона Душ 2 раза в секунду.\nПо сообщениям, противники, на которых подействовало это заклинание, никогда не возвращаются, предположительно отброшенные на множество километров.",
+
+  "spell.druids.tendrils.name": "Всплеск Бури",
+  "spell.druids.tendrils.description": "Используйте, чтобы поразить врагов напротив (имеет меньше шансов сработать за каждого врага свыше 4 в области), нанося 1.5x урона Молний и Тайной Магии в секунду.",
+
+  "spell.druids.lightningblast.name": "Кара Душ",
+  "spell.druids.lightningblast.description": "{damage_1} Молний | {damage_2} Душ.\nНаправьте гнев богов в одну точку, опустошая близлежащее пространство.",
+
+  "spell.druids.galvanic_rite.name": "Ритуал Душ",
+  "spell.druids.galvanic_rite.description": "Поразите врага энергией Тайной Магии за каждые 0.45x Тайной и Магии Душ, а также получая 1 заряд Силы Молний на 10 секунд (до 5 зарядов максимум).",
+
+  "spell.druids.maelstromtotem.name": "Тотем Вихря",
+  "spell.druids.maelstromtotem.description": "{damage_1} Душ | {damage_2} Льда | {damage_3} Огня 4 раза в секунду.\nВ выбранном вами месте создается чучело вечного вихря, ввергая территорию во власть стихиям.",
+
+  "spell.druids.soulfirebastion.name": "Бастион Ожога Души",
+  "spell.druids.soulfirebastion.description": "Каждый знающий маг понимает, что единовременно в достаточной степени можно защищать либо тело, либо разум. Вопрос лишь в том когда, и что именно. (Переключаемый эффект. Произнесите заклинание во время того как крадетесь, чтобы снять эффект)"
+
+}
