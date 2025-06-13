@@ -24,11 +24,7 @@ public class WarriorRenderer<T extends AncestralWarrior> extends GeoEntityRender
         return 15;
     }
 
-    @Override
-    public void actuallyRender(MatrixStack poseStack, AncestralWarrior animatable, BakedGeoModel model, RenderLayer renderType, VertexConsumerProvider bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
-        colour = (int)(colour * Math.min(1,(animatable.getTick(animatable)+partialTick)/20));
-        super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, colour);
-    }
+
     @Override
     protected int getSkyLight(AncestralWarrior entity, BlockPos pos) {
         return 15;

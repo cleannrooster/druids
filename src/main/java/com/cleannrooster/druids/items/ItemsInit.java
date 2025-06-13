@@ -11,6 +11,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.spell_engine.api.item.SpellBooks;
 import net.spell_engine.api.item.weapon.Weapon;
+import net.spell_engine.api.spell.Spell;
+import net.spell_engine.utils.TargetHelper;
+import net.spell_engine.utils.VectorHelper;
 
 import java.util.ArrayList;
 
@@ -27,7 +30,10 @@ public class ItemsInit {
 
     private static Item registerItem(String name, Item item){
         return Registry.register(Registries.ITEM, Identifier.of(MODID,name),item);
+
     }
+
+
     private static void addItemToGroup(Item item){
         ItemGroupEvents.modifyEntriesEvent(KEY).register((content) -> {
             content.add(item);

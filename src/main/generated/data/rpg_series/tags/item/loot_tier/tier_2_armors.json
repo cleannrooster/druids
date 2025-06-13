@@ -1,0 +1,20 @@
+{
+  "values": [
+    {
+      "id": "druids:primalist_head",
+      "required": false
+    },
+    {
+      "id": "druids:primalist_chest",
+      "required": false
+    },
+    {
+      "id": "druids:primalist_legs",
+      "required": false
+    },
+    {
+      "id": "druids:primalist_feet",
+      "required": false
+    }
+  ]
+}

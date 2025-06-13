@@ -105,7 +105,7 @@ public class AncestralWarrior extends PathAwareEntity implements Ownable, TotemS
             ((WorldScheduler) this.getWorld()).schedule(20, () ->{
                 ParticleHelper.sendBatches(this, SpellRegistry.from(this.getWorld()).get(Identifier.of(Druids.MODID,"pound")).release.particles);
                 for(Entity entity : TargetHelper.targetsFromArea(this,6,new Spell.Target.Area(),  target1 -> EntityRelations
-                        .actionAllowed(SpellTarget.FocusMode.AREA, SpellTarget.Intent.HARMFUL,player,target1)&& !(target1 instanceof Ownable ownable && ownable.getOwner().equals(this.getOwner())))) {
+                        .actionAllowed(SpellTarget.FocusMode.AREA, SpellTarget.Intent.HARMFUL,player,target1)&& !(target1 instanceof Ownable ownable && ownable.getOwner() != null && ownable.getOwner().equals(this.getOwner())))) {
                     SpellHelper.performImpacts(this.getWorld(), player, entity, this, SpellRegistry.from(this.getWorld()).getEntry(Identifier.of(Druids.MODID, "ancestral_totem")).get(),
                             SpellRegistry.from(this.getWorld()).get(Identifier.of(Druids.MODID, "ancestral_totem")).impacts, new SpellHelper.ImpactContext().power(this.getSpellPower()).position(this.getPos()));
 

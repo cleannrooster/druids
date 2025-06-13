@@ -32,6 +32,7 @@ public class TotemEntity<T extends MobEntity> extends MobEntity implements GeoEn
 
     public static final RawAnimation SPINNING = RawAnimation.begin().thenLoop("animation.model.spin");
     private Entity owner;
+
     @Nullable
     private int ownerUuid;
     public Entity target;
