@@ -59,4 +59,5 @@ public class RenderLayerItemWarriorEntity<T extends AncestralWarrior> extends Bl
         super.renderStackForBone(poseStack, bone, stack, animatable, bufferSource, partialTick, packedLight, packedOverlay);
     }
 
+
 }

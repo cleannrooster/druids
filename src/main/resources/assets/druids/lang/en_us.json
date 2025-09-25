@@ -39,11 +39,14 @@
   "spell.druids.spectral_goat.name": "Rampaging Spirit",
   "spell.druids.spectral_goat.description": "Summon the rampaging spirit of an ancestral goat. The goat will follow an enemy target if it has one, acting unpredictably otherwise. It deals negligible damage on impact but high knockback.",
 
-  "spell.druids.ancestral_totem.name": "Ancestral Totem",
-  "spell.druids.ancestral_totem.description": "Summon forth an ancestral totem that gathers the spirits of your ancestors to guard it. Nearby enemies attract ancestors that slam them, dealing {damage} physical damage in an area.",
+  "spell.druids.ancestral_totem.name": "Shockwave Totem",
+  "spell.druids.ancestral_totem.description": "Summon forth an ancestral totem that emits a shockwave every two seconds, deaking {damage} physical damage in an area based on your melee weapon..",
 
   "spell.druids.ancestral_avatar.name": "Ancestral Avatar",
   "spell.druids.ancestral_avatar.description": "You soul ignites your nearby Ancestral Totems, dealing 10%% of the totem's maximum life as soul damage in an area, destroying the totem. Gain Ancestral Avatar for eight seconds, gaining 20%% more physical damage per totem destroyed this way.",
+
+  "spell.druids.seismic_cry.name": "Seismic Cry",
+  "spell.druids.seismic_cry.description": "Unleash a rattling bellow, stunning enemies in an area briefly and knocking them back decently.",
 
   "spell.druids.galvanize.name": "Arc",
   "spell.druids.galvanize.description": "{damage} Lightning Damage. Launch arcing lightning energy forward, chaining twice. When chaining, up to two lesser chains hit the closest eligible enemies, which cannot chain further.",

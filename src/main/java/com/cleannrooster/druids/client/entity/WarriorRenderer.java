@@ -19,14 +19,6 @@ public class WarriorRenderer<T extends AncestralWarrior> extends GeoEntityRender
     }
 
 
-    @Override
-    protected int getBlockLight(AncestralWarrior entity, BlockPos pos) {
-        return 15;
-    }
 
 
-    @Override
-    protected int getSkyLight(AncestralWarrior entity, BlockPos pos) {
-        return 15;
-    }
 }

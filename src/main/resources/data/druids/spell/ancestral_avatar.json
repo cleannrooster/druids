@@ -5,9 +5,13 @@
   "learn": { },
   "type": "ACTIVE",
 
+
   "active": {
     "cast": {
-      "duration": 0
+      "animation": "druids:warcry_start",
+      "movement_speed": 0.0,
+
+      "duration": 0.2
     }
   },
   "target": {
@@ -23,7 +27,7 @@
     }
   },
   "release": {
-    "animation": "spell_engine:one_handed_projectile_release",
+    "animation": "druids:warcry_full",
     "sound": {
       "id": "spell_engine:generic_soul_release"
     },

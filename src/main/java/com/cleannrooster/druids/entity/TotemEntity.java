@@ -1,5 +1,6 @@
 package com.cleannrooster.druids.entity;
 
+import com.cleannrooster.druids.Druids;
 import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
 import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.GeoAnimatable;
@@ -14,14 +15,24 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Ownable;
 import net.minecraft.entity.ai.TargetPredicate;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
+import net.spell_engine.api.spell.Spell;
+import net.spell_engine.api.spell.registry.SpellRegistry;
+import net.spell_engine.fx.ParticleHelper;
 import net.spell_engine.internals.SpellHelper;
+import net.spell_engine.internals.target.EntityRelations;
+import net.spell_engine.internals.target.SpellTarget;
+import net.spell_engine.utils.TargetHelper;
 import net.spell_power.api.SpellPower;
 import org.jetbrains.annotations.Nullable;
 
@@ -88,17 +99,15 @@ public class TotemEntity<T extends MobEntity> extends MobEntity implements GeoEn
                     }
                 }
                 LivingEntity closest = this.getWorld().getClosestEntity(entityList, TargetPredicate.DEFAULT,this    ,this.getX(),this.getY(),this.getZ());
-                if( closest != null) {
-                    T mob = this.getBuilder().create(this.getWorld());
-                    if (mob instanceof TotemSummon<?> totemSummon) {
-                        (totemSummon).setTotem(this);
-                        mob.setPosition(this.getPos().add(closest.getPos().subtract(this.getPos()).normalize().multiply(2)));
-                        mob.lookAt(EntityAnchorArgumentType.EntityAnchor.EYES,mob.getPos());
-                        mob.setTarget(closest);
-                        this.getWorld().spawnEntity(mob);
+                if( closest != null && getOwner() instanceof PlayerEntity && this.age % 40 == 0) {
+                    ParticleHelper.sendBatches(this, SpellRegistry.from(this.getWorld()).get(Identifier.of(Druids.MODID,"pound")).release.particles);
+                    for(Entity entity : TargetHelper.targetsFromArea(this,6,new Spell.Target.Area(), target1 -> EntityRelations
+                            .actionAllowed(SpellTarget.FocusMode.AREA, SpellTarget.Intent.HARMFUL,(PlayerEntity)this.getOwner(),target1)&& !(target1 instanceof Ownable ownable && ownable.getOwner() != null && ownable.getOwner().equals(this.getOwner())))) {
+                        SpellHelper.performImpacts(this.getWorld(), (PlayerEntity)this.getOwner(), entity, this, SpellRegistry.from(this.getWorld()).getEntry(Identifier.of(Druids.MODID, "ancestral_totem")).get(),
+                                SpellRegistry.from(this.getWorld()).get(Identifier.of(Druids.MODID, "ancestral_totem")).impacts, new SpellHelper.ImpactContext().power(this.getSpellPower()).position(this.getPos()));
 
                     }
-
+                    this.playSound(SoundEvents.ENTITY_GENERIC_EXPLODE.value());
                 }
             }
         }
@@ -107,6 +116,15 @@ public class TotemEntity<T extends MobEntity> extends MobEntity implements GeoEn
         }
         super.tick();
     }
+
+    @Override
+    public boolean damage(DamageSource source, float amount) {
+        if(this.getOwner() != null && source.getAttacker() != null &&  source.getAttacker().equals(this.getOwner())){
+            return false;
+        }
+        return super.damage(source, amount);
+    }
+
     private SpellPower.Result power = null;
     public SpellPower.Result getSpellPower() {
         return power;
