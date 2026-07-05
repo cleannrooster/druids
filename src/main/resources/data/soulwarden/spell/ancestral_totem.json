@@ -1,0 +1,39 @@
+{
+  "school": "spell_power:soul",
+  "tier": 3,
+  "learn": {},
+  "type": "ACTIVE",
+
+  "active": {
+    "cast": {
+      "animation": { "id": "spell_engine:two_handed_channeling" },
+      "duration": 0.75
+    }
+  },
+  "target": {
+    "type": "CASTER"
+  },
+  "deliver": {
+    "type": "CUSTOM",
+    "custom": {
+      "handler": "soulwarden:ancestral_totem"
+    }
+  },
+  "release": {
+    "particles": [
+      {
+        "particle_id": "sculk_soul",
+        "shape": "SPHERE",
+        "origin": "CENTER",
+        "count": 8,
+        "min_speed": 0.05,
+        "max_speed": 0.2
+      }
+    ]
+  },
+  "cost": {
+    "cooldown": {
+      "duration": 15.0
+    }
+  }
+}

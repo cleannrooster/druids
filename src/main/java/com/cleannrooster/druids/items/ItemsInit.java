@@ -9,9 +9,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.spell_engine.api.item.SpellBooks;
-import net.spell_engine.api.item.weapon.Weapon;
 import net.spell_engine.api.spell.Spell;
+import net.spell_engine.rpg_series.item.Weapon;
 import net.spell_engine.utils.TargetHelper;
 import net.spell_engine.utils.VectorHelper;
 
@@ -21,6 +20,8 @@ import static com.cleannrooster.druids.Druids.MODID;
 
 public class ItemsInit {
     public static final ArrayList<Weapon.Entry> entries = new ArrayList<>();
+
+    public static Item SOUL_FRAGMENT_ITEM;
 
     public static ItemGroup DRUIDS;
 
@@ -43,11 +44,12 @@ public class ItemsInit {
 
         DRUIDS = FabricItemGroup.builder()
                 .icon(() -> new ItemStack(Armors.primalistNetherite.head))
-                .displayName(Text.translatable("itemGroup.druids.general"))
+                .displayName(Text.translatable("itemGroup.soulwarden.general"))
                 .build();
         Registry.register(Registries.ITEM_GROUP, KEY, DRUIDS);
-        SpellBooks.createAndRegister(Identifier.of(MODID,"ancestral_warrior"),KEY);
+      //  SpellBooks.createAndRegister(Identifier.of(MODID,"ancestral_warrior"),KEY);
 
+        SOUL_FRAGMENT_ITEM = registerItem("soul_fragment", new Item(new Item.Settings()));
 
     }
 }

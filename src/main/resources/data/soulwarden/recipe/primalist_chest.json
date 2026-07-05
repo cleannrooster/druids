@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": {
+      "item": "minecraft:leather"
+    },
+    "D": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "G G",
+    "DDD",
+    "GDG"
+  ],
+  "result": {
+    "id": "soulwarden:primalist_chest"
+  }
+}

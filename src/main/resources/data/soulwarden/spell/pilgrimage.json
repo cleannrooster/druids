@@ -1,0 +1,48 @@
+{
+  "range": 16.0,
+  "school": "spell_power:soul",
+  "tier": 4,
+  "learn": {},
+  "type": "ACTIVE",
+
+  "active": {
+    "cast": {
+      "animation": { "id": "spell_engine:two_handed_area_release" },
+      "duration": 1.2
+    }
+  },
+  "target": {
+    "type": "AREA",
+    "area": {
+    }
+  },
+  "deliver": {
+    "type": "CUSTOM",
+    "custom": {
+      "handler": "soulwarden:pilgrimage"
+    }
+  },
+  "release": {
+    "sound": {
+      "id": "soulwarden:ritual",
+      "randomness": 0.2,
+      "volume": 0.5
+    },
+    "particles": [
+      {
+        "particle_id": "sculk_soul",
+        "shape": "SPHERE",
+        "origin": "CASTER",
+        "count": 40,
+        "min_speed": 0.1,
+        "max_speed": 0.5
+      }
+    ]
+  },
+  "impacts": [],
+  "cost": {
+    "cooldown": {
+      "duration": 20.0
+    }
+  }
+}

@@ -12,8 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class LivingEntityMixin {
 	@Inject(method = "createLivingAttributes", at = @At("RETURN"))
 	private static void addAttributesDruids_RETURN(final CallbackInfoReturnable<DefaultAttributeContainer.Builder> info) {
-		info.getReturnValue().add(DruidsAttributes.TOTEMHEALTH);
-
 
 	}
 }

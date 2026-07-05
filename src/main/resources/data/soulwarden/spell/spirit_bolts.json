@@ -1,0 +1,129 @@
+{
+  "range": 48.0,
+  "school": "spell_power:soul",
+  "tier": 1,
+  "learn": {},
+  "type": "ACTIVE",
+
+  "active": {
+    "cast": {
+      "animation": { "id":"spell_engine:two_handed_channeling"},
+      "duration": 8.0,
+      "channel_ticks": 32
+    }
+  },
+  "target": {
+    "type": "AIM",
+    "aim": {
+      "sticky": false
+    }
+  },
+  "deliver": {
+    "type": "PROJECTILE",
+    "projectile": {
+      "direct_towards_target": true,
+      "launch_properties": {
+        "velocity": 2.0,
+        "sound": {
+          "id": "soulwarden:magic",
+          "randomness": 0.05,
+          "volume": 0.25
+        }
+      },
+      "projectile": {
+        "hitbox": {
+          "width": 0.5,
+          "height": 0.5
+        },
+        "perks": {
+          "pierce": 4
+        },
+        "client_data": {
+          "travel_particles": [
+            {
+              "particle_id": "sculk_soul",
+              "shape": "SPHERE",
+              "origin": "CENTER",
+              "count": 1,
+              "min_speed": 0.05,
+              "max_speed": 0.15
+            }
+          ],
+          "model": {
+            "model_id": "soulwarden:spell_projectile/necrospirit",
+            "scale": 0.25
+          }
+        }
+      }
+    }
+  },
+  "release": {
+    "sound": {
+      "id": "soulwarden:magic",
+      "randomness": 0.2
+    },
+    "particles": [
+      {
+        "particle_id": "sculk_soul",
+        "shape": "CIRCLE",
+        "origin": "CASTER",
+        "count": 4,
+        "min_speed": 0.05,
+        "max_speed": 0.15
+      }
+    ]
+  },
+  "impacts": [
+    {
+      "action": {
+        "type": "DAMAGE",
+        "damage": {
+          "knockback": 0,
+          "spell_power_coefficient": 0.8
+        }
+      },
+      "particles": [
+        {
+          "particle_id": "sculk_soul",
+          "shape": "SPHERE",
+          "origin": "CENTER",
+          "count": 4,
+          "min_speed": 0.05,
+          "max_speed": 0.15
+        }
+      ],
+      "sound": {
+        "id": "entity.player.hurt",
+        "randomness": 0.3
+      }
+    },
+    {
+      "action": {
+        "type": "CUSTOM",
+        "custom": {
+          "handler": "soulwarden:spirit_bolts",
+          "intent": "HARMFUL"
+        }
+      },
+      "particles": [
+        {
+          "particle_id": "sculk_soul",
+          "shape": "SPHERE",
+          "origin": "CENTER",
+          "count": 4,
+          "min_speed": 0.05,
+          "max_speed": 0.15
+        }
+      ],
+      "sound": {
+        "id": "entity.player.hurt",
+        "randomness": 0.3
+      }
+    }
+  ],
+  "cost": {
+    "cooldown": {
+      "duration": 0.15
+    }
+  }
+}

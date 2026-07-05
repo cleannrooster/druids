@@ -1,0 +1,13 @@
+{
+	"required": true,
+	"package": "com.cleannrooster.druids.mixin",
+	"compatibilityLevel": "JAVA_17",
+	"mixins": [
+		"EntityAttributesMixin",
+		"LivingEntityMixin",
+		"SpellProjectileMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

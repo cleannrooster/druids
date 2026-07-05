@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "soulwarden:wand_bone",
+      "required": false
+    },
+    {
+      "id": "soulwarden:staff_bone",
+      "required": false
+    }
+  ]
+}

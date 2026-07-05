@@ -1,0 +1,48 @@
+{
+  "range": 8.0,
+  "school": "spell_power:soul",
+  "tier": 2,
+  "learn": {},
+  "type": "ACTIVE",
+
+  "active": {
+    "cast": {
+      "animation": { "id":"spell_engine:one_handed_projectile_release"},
+      "duration": 0.8
+    }
+  },
+  "target": {
+    "type": "AREA",
+    "area": {
+    }
+  },
+  "deliver": {
+    "type": "CUSTOM",
+    "custom": {
+      "handler": "soulwarden:bind"
+    }
+  },
+  "release": {
+    "sound": {
+      "id": "soulwarden:ominous",
+      "randomness": 0.2,
+      "volume": 0.5
+    },
+    "particles": [
+      {
+        "particle_id": "sculk_soul",
+        "shape": "SPHERE",
+        "origin": "CENTER",
+        "count": 20,
+        "min_speed": 0.05,
+        "max_speed": 0.3
+      }
+    ]
+  },
+  "impacts": [],
+  "cost": {
+    "cooldown": {
+      "duration": 4.0
+    }
+  }
+}

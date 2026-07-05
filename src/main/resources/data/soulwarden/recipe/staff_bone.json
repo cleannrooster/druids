@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": {
+      "item": "minecraft:bone"
+    },
+    "D": {
+      "item": "minecraft:copper_ingot"
+    }
+  },
+  "pattern": [
+    "  D",
+    " G ",
+    "G  "
+  ],
+  "result": {
+    "id": "soulwarden:staff_bone"
+  }
+}

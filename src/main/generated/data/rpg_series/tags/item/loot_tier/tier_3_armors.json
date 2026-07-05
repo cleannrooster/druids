@@ -1,19 +1,19 @@
 {
   "values": [
     {
-      "id": "druids:primalist_netherite_head",
+      "id": "soulwarden:primalist_netherite_head",
       "required": false
     },
     {
-      "id": "druids:primalist_netherite_chest",
+      "id": "soulwarden:primalist_netherite_chest",
       "required": false
     },
     {
-      "id": "druids:primalist_netherite_legs",
+      "id": "soulwarden:primalist_netherite_legs",
       "required": false
     },
     {
-      "id": "druids:primalist_netherite_feet",
+      "id": "soulwarden:primalist_netherite_feet",
       "required": false
     }
   ]

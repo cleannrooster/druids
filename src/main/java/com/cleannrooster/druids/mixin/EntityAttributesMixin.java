@@ -2,7 +2,6 @@ package com.cleannrooster.druids.mixin;
 
 import com.cleannrooster.druids.Druids;
 import com.cleannrooster.druids.DruidsAttributes;
-import com.extraspellattributes.DynamicAttribute;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -17,7 +16,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class EntityAttributesMixin {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void static_tail_Druid(CallbackInfo ci) {
-        DruidsAttributes.TOTEMHEALTH = Registry.registerReference(Registries.ATTRIBUTE, Identifier.of(Druids.MODID,"totem_health"),new DynamicAttribute("attribute.name.druids.totem_health"));
 
     }
 }

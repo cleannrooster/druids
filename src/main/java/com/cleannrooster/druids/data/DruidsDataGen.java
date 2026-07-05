@@ -2,6 +2,7 @@ package com.cleannrooster.druids.data;
 
 
 import com.cleannrooster.druids.items.Armors.Armors;
+import com.cleannrooster.druids.items.DruidWeapons;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -27,6 +28,7 @@ public class DruidsDataGen implements DataGeneratorEntrypoint {
         @Override
         protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
             generateArmorTags(Armors.entries);
+            generateWeaponTags(DruidWeapons.entries);
 
         }
     }

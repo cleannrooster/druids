@@ -1,0 +1,12 @@
+{
+  "values": [
+    {
+      "id": "soulwarden:wand_netherite_bone",
+      "required": false
+    },
+    {
+      "id": "soulwarden:staff_netherite_bone",
+      "required": false
+    }
+  ]
+}

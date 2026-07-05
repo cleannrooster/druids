@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "druids:item/aetherial_spell_book"
-  }
-
-}

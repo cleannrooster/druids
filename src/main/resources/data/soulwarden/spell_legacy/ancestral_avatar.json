@@ -1,0 +1,81 @@
+{
+  "range": 16.0,
+  "school": "SOUL",
+  "tier": 4,
+  "learn": { },
+  "type": "ACTIVE",
+
+
+  "active": {
+    "cast": {
+      "animation": "soulwarden:warcry_start",
+      "movement_speed": 0.0,
+
+      "duration": 0.2
+    }
+  },
+  "target": {
+    "type": "AREA",
+    "area": {
+      "vertical_range_multiplier": 1
+    }
+  },
+  "deliver": {
+    "type": "CUSTOM",
+    "custom": {
+      "handler": "soulwarden:ancestral_avatar"
+    }
+  },
+  "release": {
+    "animation": "soulwarden:warcry_full",
+    "sound": {
+      "id": "spell_engine:generic_soul_release"
+    },
+    "particles": [
+      {
+        "particle_id": "sculk_soul",
+        "shape": "SPHERE",
+        "origin": "CENTER",
+        "count": 200,
+        "min_speed": 0.35,
+        "max_speed": 0.4
+      },
+      {
+        "particle_id": "firework",
+        "shape": "CIRCLE",
+        "origin": "CENTER",
+        "count": 100,
+        "min_speed": 0.4,
+        "max_speed": 0.6
+      }
+    ]
+  },
+  "impacts": [
+    {
+
+      "school": "SOUL",
+      "action": {
+        "type": "DAMAGE",
+        "damage": {
+          "spell_power_coefficient": 1
+        }
+      },
+      "particles": [
+        {
+          "particle_id": "sculk_soul",
+          "shape": "SPHERE",
+          "origin": "CENTER",
+          "count": 20,
+          "min_speed": 0.05,
+          "max_speed": 0.2
+        }
+      ]
+    }
+  ],
+
+  "cost": {
+    "cooldown": {
+      "duration": 4
+    }
+  }
+}

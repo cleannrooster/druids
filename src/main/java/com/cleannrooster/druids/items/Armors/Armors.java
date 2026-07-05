@@ -13,8 +13,11 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
 import net.spell_engine.api.config.ArmorSetConfig;
 import net.spell_engine.api.config.AttributeModifier;
-import net.spell_engine.api.item.Equipment;
-import net.spell_engine.api.item.armor.Armor;
+import net.spell_engine.rpg_series.item.Armor;
+import net.spell_engine.rpg_series.item.Equipment;
+import net.spell_power.api.SpellPower;
+import net.spell_power.api.SpellPowerMechanics;
+import net.spell_power.api.SpellSchools;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,28 +73,20 @@ public class Armors {
             ArmorSetConfig.with(
                     new ArmorSetConfig.Piece(2)
                             .addAll(List.of(
-                                    AttributeModifier.multiply(Identifier.ofVanilla("generic.attack_damage"), 0.04F),
-
-                                    AttributeModifier.bonus(Identifier.of(MODID,"totem_health"), 3)
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F)
 
                             )),
-                    new ArmorSetConfig.Piece(7)
+                    new ArmorSetConfig.Piece(6)
                             .addAll(List.of(
-                                    AttributeModifier.multiply(Identifier.ofVanilla("generic.attack_damage"), 0.04F),
-
-                                    AttributeModifier.bonus(Identifier.of(MODID,"totem_health"), 3)
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F)
                             )),
                     new ArmorSetConfig.Piece(5)
                             .addAll(List.of(
-                                    AttributeModifier.multiply(Identifier.ofVanilla("generic.attack_damage"), 0.04F),
-
-                                    AttributeModifier.bonus(Identifier.of(MODID,"totem_health"), 3)
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F)
                             )),
                     new ArmorSetConfig.Piece(2)
                             .addAll(List.of(
-                                    AttributeModifier.multiply(Identifier.ofVanilla("generic.attack_damage"), 0.04F),
-
-                                    AttributeModifier.bonus(Identifier.of(MODID,"totem_health"), 3)
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F)
                             ))
             ),2)
             .armorSet();
@@ -111,28 +106,26 @@ public class Armors {
             ArmorSetConfig.with(
                     new ArmorSetConfig.Piece(3)
                             .addAll(List.of(
-                                    AttributeModifier.multiply(Identifier.ofVanilla("generic.attack_damage"), 0.06F),
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F),
+                                    AttributeModifier.multiply(SpellSchools.SOUL.id, 0.1F)
 
-                                    AttributeModifier.bonus(Identifier.of(MODID,"totem_health"), 5)
 
-                            )),
-                    new ArmorSetConfig.Piece(8)
-                            .addAll(List.of(
-                                    AttributeModifier.multiply(Identifier.ofVanilla("generic.attack_damage"), 0.06F),
 
-                                    AttributeModifier.bonus(Identifier.of(MODID,"totem_health"), 5)
                             )),
                     new ArmorSetConfig.Piece(6)
                             .addAll(List.of(
-                                    AttributeModifier.multiply(Identifier.ofVanilla("generic.attack_damage"), 0.06F),
-
-                                    AttributeModifier.bonus(Identifier.of(MODID,"totem_health"), 5)
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F),
+                                    AttributeModifier.multiply(SpellSchools.SOUL.id, 0.1F)
                             )),
-                    new ArmorSetConfig.Piece(3)
+                    new ArmorSetConfig.Piece(5)
                             .addAll(List.of(
-                                    AttributeModifier.multiply(Identifier.ofVanilla("generic.attack_damage"), 0.06F),
-
-                                    AttributeModifier.bonus(Identifier.of(MODID,"totem_health"), 5)
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F),
+                                    AttributeModifier.multiply(SpellSchools.SOUL.id, 0.1F)
+                            )),
+                    new ArmorSetConfig.Piece(2)
+                            .addAll(List.of(
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F),
+                                    AttributeModifier.multiply(SpellSchools.SOUL.id, 0.1F)
                             ))
             ),3)
             .armorSet();

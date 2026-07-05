@@ -1,14 +1,16 @@
 package com.cleannrooster.druids.config;
 
 
+import net.spell_engine.api.config.ConfigFile;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class Default {
-    public final static DruidsConfig itemConfig;
+    public final static ConfigFile.Equipment itemConfig;
 
     static {
-        itemConfig = new DruidsConfig();
+        itemConfig =  new ConfigFile.Equipment();
         var largeWeight = 0;
         var smallWeight = 5;
 

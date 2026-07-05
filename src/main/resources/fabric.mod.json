@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "druids",
+	"id": "soulwarden",
 	"version": "${version}",
-	"name": "Primal Druidry",
-	"description": "Unleash the power of your ancestors!",
+	"name": "Soulwarden",
+	"description": "Be a shepherd of souls!",
 	"authors": [
 		"cleannrooster!"
 	],
@@ -12,7 +12,7 @@
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/druids/icon.png",
+	"icon": "assets/soulwarden/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
@@ -26,14 +26,13 @@
 		]
 	},
 	"mixins": [
-		"druids.mixins.json"
+		"soulwarden.mixins.json"
 	],
 	"depends": {
 		"fabricloader": ">=0.16.5",
 		"minecraft": "~1.21",
 		"java": ">=21",
 		"fabric-api": "*",
-		"extraspellattributes": ">=1.0.6+1.21.1",
 		"spell_engine": ">=1.6.0+1.21.1",
 		"spell_power": ">=1.2.0+1.21.1"
 	},

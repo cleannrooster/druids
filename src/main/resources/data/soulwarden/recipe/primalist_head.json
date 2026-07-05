@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "A": {
+      "item": "minecraft:bone"
+    },
+    "G": {
+      "item": "minecraft:leather"
+    }
+  },
+  "pattern": [
+    "GGG",
+    "A A",
+    "G G"
+  ],
+  "result": {
+    "id": "soulwarden:primalist_head"
+  }
+}

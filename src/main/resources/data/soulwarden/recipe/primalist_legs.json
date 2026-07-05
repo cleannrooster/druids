@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "G": {
+      "item": "minecraft:leather"
+    },
+    "S": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "SGS",
+    "G G",
+    "G G"
+  ],
+  "result": {
+    "id": "soulwarden:primalist_legs"
+  }
+}

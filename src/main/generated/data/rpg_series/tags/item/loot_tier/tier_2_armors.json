@@ -1,19 +1,19 @@
 {
   "values": [
     {
-      "id": "druids:primalist_head",
+      "id": "soulwarden:primalist_head",
       "required": false
     },
     {
-      "id": "druids:primalist_chest",
+      "id": "soulwarden:primalist_chest",
       "required": false
     },
     {
-      "id": "druids:primalist_legs",
+      "id": "soulwarden:primalist_legs",
       "required": false
     },
     {
-      "id": "druids:primalist_feet",
+      "id": "soulwarden:primalist_feet",
       "required": false
     }
   ]

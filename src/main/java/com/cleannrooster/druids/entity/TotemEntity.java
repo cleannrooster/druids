@@ -1,20 +1,13 @@
 package com.cleannrooster.druids.entity;
 
-import com.cleannrooster.druids.Druids;
-import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
-import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
-import mod.azure.azurelib.core.animatable.GeoAnimatable;
-import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
-import mod.azure.azurelib.core.animation.AnimatableManager;
-import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.core.object.PlayState;
-import net.minecraft.command.argument.EntityAnchorArgumentType;
+import com.cleannrooster.druids.client.entity.AncestralGuardianAnimationProvider;
+import com.cleannrooster.druids.client.entity.TotemAnimationProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.Ownable;
-import net.minecraft.entity.ai.TargetPredicate;
+import net.minecraft.entity.attribute.DefaultAttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
@@ -22,163 +15,313 @@ import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.spell_engine.api.spell.Spell;
-import net.spell_engine.api.spell.registry.SpellRegistry;
-import net.spell_engine.fx.ParticleHelper;
-import net.spell_engine.internals.SpellHelper;
 import net.spell_engine.internals.target.EntityRelations;
 import net.spell_engine.internals.target.SpellTarget;
 import net.spell_engine.utils.TargetHelper;
 import net.spell_power.api.SpellPower;
+import net.spell_power.api.SpellSchools;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class TotemEntity<T extends MobEntity> extends MobEntity implements GeoEntity, Ownable {
+public class TotemEntity extends MobEntity implements Ownable {
 
-    public static final RawAnimation SPINNING = RawAnimation.begin().thenLoop("animation.model.spin");
-    private Entity owner;
+    // ── Phase constants (public so the client renderer can drive animations) ─
+    public static final int PHASE_SPAWNING = 0;   // 1.5 s startup
+    public static final int PHASE_CHARGING = 1;   // 3.0 s charge
+    public static final int PHASE_WINDDOWN = 2;   // 0.5 s after shockwave
+    public final TotemAnimationProvider.MinibossAnimationDispatcher dispatcher;
 
-    @Nullable
-    private int ownerUuid;
-    public Entity target;
-    public SpellHelper.ImpactContext context;
-    private EntityType<T> builder = null;
+    private static final int SPAWN_DURATION    = 30;   // ticks
+    private static final int CHARGE_DURATION   = 60;   // ticks
+    private static final int WINDDOWN_DURATION = 10;   // ticks
+    private static final double SHOCKWAVE_RADIUS = 8.0;
 
-    public TotemEntity(EntityType<? extends TotemEntity> entityType, World world) {
-        super(entityType, world);
-        this.setNoGravity(true);
-        this.noClip = true;
+    // Synced to client for animation
+    private static final TrackedData<Integer> OWNER_ID =
+            DataTracker.registerData(TotemEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final TrackedData<Integer> PHASE =
+            DataTracker.registerData(TotemEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
+    // Server-side only — not needed by the client
+    private int phaseTicks        = 0;
+    private int lifetimeTicks     = 0;
+    private int maxLifetimeTicks  = 300;   // 15 s default; scaled by soul power at spawn
+    private float shockwaveDamage = 5.0f;  // set from caster's attack damage at spawn
+    private boolean durationExpired = false;
+
+    public TotemEntity(EntityType<? extends MobEntity> type, World world) {
+        super(type, world);
+        this.dispatcher = new TotemAnimationProvider.MinibossAnimationDispatcher(this);
     }
 
-    public static final TrackedData<Integer> COLOR;
-    public static final TrackedData<Integer> OWNER;
+    // ─────────────────────────────────────────────────────────────────────────
+    // Called by SpellsV2 immediately before spawnEntity().
+    // Reads soul power attribute to scale health / duration, and locks in the
+    // caster's current weapon damage for every future shockwave.
+    // ─────────────────────────────────────────────────────────────────────────
+    public void initializeForCaster(PlayerEntity caster) {
+        // Soul attribute value: base 1.0; each Guide stack adds 0.1 (ADD_MULTIPLIED_BASE)
+        // At 8 stacks → 1.8 → 80 % bonus to health and duration.
+        double soulPower = Math.max(1.0D,1.0D+SpellPower.getSpellPower(SpellSchools.SOUL,caster).randomValue()*0.1D);
 
-    static {
-        COLOR = DataTracker.registerData(TotemEntity.class, TrackedDataHandlerRegistry.INTEGER);
-        OWNER = DataTracker.registerData(TotemEntity.class, TrackedDataHandlerRegistry.INTEGER);
+        double scaledHealth = 20.0 * soulPower;
+        maxLifetimeTicks = (int) (300 * soulPower); // 15 s × soulPower
 
+        var healthAttr = getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH);
+        if (healthAttr != null) healthAttr.setBaseValue(scaledHealth);
+        this.setHealth((float) scaledHealth);
+
+        // Shockwave deals the caster's full melee attack damage (weapon + modifiers)
+        shockwaveDamage = (float) caster.getAttributeValue(EntityAttributes.GENERIC_ATTACK_DAMAGE);
     }
 
+    // ─────────────────────────────────────────────────────────────────────────
+    // Goals — none. Totems never move.
+    // ─────────────────────────────────────────────────────────────────────────
+    @Override
+    protected void initGoals() {}
 
+    @Override
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
-        builder.add(COLOR,1);
-        builder.add(OWNER,-1);
-
-    }
-    public EntityType<T> getBuilder(){
-        return this.builder;
-    }
-    public void setBuilder(EntityType<T> builder){
-        this.builder = builder;
+        builder.add(OWNER_ID, -1);
+        builder.add(PHASE, PHASE_SPAWNING);
     }
 
-    public int getColor(){
-        return this.dataTracker.get(COLOR);
-    }
-    public void setColor(int color){
-         this.dataTracker.set(COLOR,color);
-    }
+    // ─────────────────────────────────────────────────────────────────────────
+    // State machine
+    // ─────────────────────────────────────────────────────────────────────────
     @Override
     public void tick() {
-        if(this.getOwner() != null && !this.getWorld().isClient&& this.getBuilder() != null) {
-            if(this.age % 40 == 0 ){
-                List<LivingEntity> entityList = new ArrayList<>();
-                for(Entity entity : ((ServerWorld)this.getWorld()).iterateEntities()){
-                    if (entity != this.getOwner() && entity.distanceTo(this) < 8) {
+        if(firstUpdate){
+            this.dispatcher.rise(this);
+        }
+        super.tick();
+        if (getWorld().isClient()) return;
 
-                        if (entity instanceof LivingEntity living && living.canSee(this) && !(entity instanceof TotemSummon<?>) && !(entity instanceof TotemEntity<?>)) {
-                            entityList.add(living);
-                        }
-                    }
+        phaseTicks++;
+        lifetimeTicks++;
+
+        // Mark duration expired — do NOT discard yet; the cycle must finish.
+        if (!durationExpired && lifetimeTicks >= maxLifetimeTicks) {
+            durationExpired = true;
+        }
+
+        switch (dataTracker.get(PHASE)) {
+            case PHASE_SPAWNING -> {
+                // Play the summon sound on the very first server tick
+                if (phaseTicks == 1 && getWorld() instanceof ServerWorld sw) {
+                    sw.playSound(null, getX(), getY(), getZ(),
+                            SoundEvents.ENTITY_EVOKER_PREPARE_SUMMON,
+                            SoundCategory.NEUTRAL, 1.0f, 0.85f);
                 }
-                LivingEntity closest = this.getWorld().getClosestEntity(entityList, TargetPredicate.DEFAULT,this    ,this.getX(),this.getY(),this.getZ());
-                if( closest != null && getOwner() instanceof PlayerEntity && this.age % 40 == 0) {
-                    ParticleHelper.sendBatches(this, SpellRegistry.from(this.getWorld()).get(Identifier.of(Druids.MODID,"pound")).release.particles);
-                    for(Entity entity : TargetHelper.targetsFromArea(this,6,new Spell.Target.Area(), target1 -> EntityRelations
-                            .actionAllowed(SpellTarget.FocusMode.AREA, SpellTarget.Intent.HARMFUL,(PlayerEntity)this.getOwner(),target1)&& !(target1 instanceof Ownable ownable && ownable.getOwner() != null && ownable.getOwner().equals(this.getOwner())))) {
-                        SpellHelper.performImpacts(this.getWorld(), (PlayerEntity)this.getOwner(), entity, this, SpellRegistry.from(this.getWorld()).getEntry(Identifier.of(Druids.MODID, "ancestral_totem")).get(),
-                                SpellRegistry.from(this.getWorld()).get(Identifier.of(Druids.MODID, "ancestral_totem")).impacts, new SpellHelper.ImpactContext().power(this.getSpellPower()).position(this.getPos()));
-
+                if (phaseTicks >= SPAWN_DURATION) {
+                    this.dispatcher.charge(this);
+                    // Play the charge wind-up as soon as the first cycle begins
+                    if (getWorld() instanceof ServerWorld sw) {
+                        sw.playSound(null, getX(), getY(), getZ(),
+                                SoundEvents.ENTITY_WARDEN_SONIC_CHARGE,
+                                SoundCategory.NEUTRAL, 0.75f, 1.0f);
                     }
-                    this.playSound(SoundEvents.ENTITY_GENERIC_EXPLODE.value());
+                    transitionTo(PHASE_CHARGING);
+                }
+            }
+            case PHASE_CHARGING -> {
+                if (phaseTicks >= CHARGE_DURATION) {
+                    this.dispatcher.smash(this);
+                    performShockwave();
+                    transitionTo(PHASE_WINDDOWN);
+                }
+            }
+            case PHASE_WINDDOWN -> {
+                if (phaseTicks >= WINDDOWN_DURATION) {
+                    if (durationExpired) {
+                        // Full cycle finished after duration elapsed — despawn
+                        this.discard();
+                    } else {
+                        this.dispatcher.charge(this);
+                        // Play the charge wind-up for every subsequent cycle
+                        if (getWorld() instanceof ServerWorld sw) {
+                            sw.playSound(null, getX(), getY(), getZ(),
+                                    SoundEvents.ENTITY_WARDEN_SONIC_CHARGE,
+                                    SoundCategory.NEUTRAL, 0.75f, 1.0f);
+                        }
+                        transitionTo(PHASE_CHARGING);
+                    }
                 }
             }
         }
-        if(!this.getWorld().isClient && this.age > 16*20) {
-            this.discard();
-        }
-        super.tick();
     }
 
+    private void transitionTo(int newPhase) {
+        dataTracker.set(PHASE, newPhase);
+        phaseTicks = 0;
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Shockwave — damages and pushes all non-friendly entities in range
+    // ─────────────────────────────────────────────────────────────────────────
+    private void performShockwave() {
+        if (!(getWorld() instanceof ServerWorld sw)) return;
+
+        Entity owner = getOwner();
+        if(!(owner instanceof PlayerEntity p)) return;
+        List<LivingEntity> targets = sw.getEntitiesByClass(
+                LivingEntity.class,
+                getBoundingBox().expand(SHOCKWAVE_RADIUS),
+                e -> e != owner
+                        && !MinionGoals.isFriendlyMinion(e, owner)
+                        && distanceTo(e) <= SHOCKWAVE_RADIUS
+                        && EntityRelations.actionAllowed(SpellTarget.FocusMode.AREA, SpellTarget.Intent.HARMFUL,p,e));
+
+
+        for (LivingEntity target : targets) {
+            target.timeUntilRegen = 0;
+            target.damage(getDamageSources().magic(), shockwaveDamage);
+
+            // Outward radial push
+            Vec3d away = target.getPos().subtract(this.getPos());
+            if (away.lengthSquared() > 0) {
+                away = away.normalize().multiply(0.7);
+                target.addVelocity(away.x, 0.35, away.z);
+                target.velocityModified = true;
+            }
+        }
+
+        spawnShockwaveParticles(sw);
+
+        // Deep, resonant boom — heard well beyond the AoE radius
+        sw.playSound(null, getX(), getY(), getZ(),
+                SoundEvents.ENTITY_WARDEN_SONIC_BOOM,
+                SoundCategory.NEUTRAL, 1.2f, 0.8f);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Shockwave particle effect
+    //
+    // Three layers give a clear expanding boundary:
+    //   1. Directed ring: particles start at centre and fly outward.
+    //      count=0 → spawnParticles sends ONE directed particle with velocity
+    //      (dx * speed, dy * speed, dz * speed).  At speed ≈ 0.52, sculk_soul
+    //      particles (~16 tick lifetime) travel ~8 blocks — exactly the radius.
+    //   2. Edge ring: dense burst at the 8-block boundary marks the hard limit.
+    //   3. Centre burst: immediate tactile feedback at the impact point.
+    // ─────────────────────────────────────────────────────────────────────────
+    private void spawnShockwaveParticles(ServerWorld sw) {
+        final double cx = getX();
+        final double cy = getY() + 0.1;
+        final double cz = getZ();
+
+        // ── Layer 1: expanding ring from centre ───────────────────────────────
+        final int   RING_COUNT     = 56;
+        final double OUTWARD_SPEED = 0.52;  // blocks/tick → ~8.3 blk in 16 t
+        for (int i = 0; i < RING_COUNT; i++) {
+            double angle = (2.0 * Math.PI * i) / RING_COUNT;
+            double dx    = Math.cos(angle);
+            double dz    = Math.sin(angle);
+            // Ground-level wave crest
+            sw.spawnParticles(ParticleTypes.SCULK_SOUL,
+                    cx, cy, cz,
+                    0, dx, 0.02, dz, OUTWARD_SPEED);
+            // Slightly elevated duplicate — gives the ring visible vertical depth
+            if (i % 2 == 0) {
+                sw.spawnParticles(ParticleTypes.SCULK_SOUL,
+                        cx, cy + 0.55, cz,
+                        0, dx, 0.0, dz, OUTWARD_SPEED * 0.96);
+            }
+        }
+
+        // ── Layer 2: dense burst ring at the hard 8-block boundary ────────────
+        final int EDGE_COUNT = 36;
+        for (int i = 0; i < EDGE_COUNT; i++) {
+            double angle = (2.0 * Math.PI * i) / EDGE_COUNT;
+            sw.spawnParticles(ParticleTypes.SCULK_SOUL,
+                    cx + SHOCKWAVE_RADIUS * Math.cos(angle),
+                    cy,
+                    cz + SHOCKWAVE_RADIUS * Math.sin(angle),
+                    3, 0.2, 0.35, 0.2, 0.02);
+        }
+
+        // ── Layer 3: centre burst for immediate impact feedback ───────────────
+        sw.spawnParticles(ParticleTypes.SCULK_SOUL,
+                cx, cy + 0.2, cz,
+                18, 0.3, 0.6, 0.3, 0.06);
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Owner (Ownable) — also used by MinionGoals.isFriendlyMinion so that
+    // bound souls / guardians won't attack the totem.
+    // ─────────────────────────────────────────────────────────────────────────
+    public void setOwner(@Nullable Entity entity) {
+        if (entity != null) dataTracker.set(OWNER_ID, entity.getId());
+    }
+
+    @Nullable
+    @Override
+    public Entity getOwner() {
+        int id = dataTracker.get(OWNER_ID);
+        return id != -1 ? getWorld().getEntityById(id) : null;
+    }
+
+    /** Current phase; one of {@link #PHASE_SPAWNING}, {@link #PHASE_CHARGING}, {@link #PHASE_WINDDOWN}. */
+    public int getPhase() { return dataTracker.get(PHASE); }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Damage filter
+    // ─────────────────────────────────────────────────────────────────────────
     @Override
     public boolean damage(DamageSource source, float amount) {
-        if(this.getOwner() != null && source.getAttacker() != null &&  source.getAttacker().equals(this.getOwner())){
+        Entity attacker = source.getAttacker();
+        if (attacker != null && (attacker.equals(getOwner())
+                || MinionGoals.isFriendlyMinion(attacker, getOwner()))) {
             return false;
         }
         return super.damage(source, amount);
     }
 
-    private SpellPower.Result power = null;
-    public SpellPower.Result getSpellPower() {
-        return power;
-    }
-    public void setSpellPower(SpellPower.Result result){
-        this.power = result;
+    @Override public boolean isPushable()  { return false; }
+    @Override public boolean isCollidable() { return true; }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // Attributes
+    // ─────────────────────────────────────────────────────────────────────────
+    public static DefaultAttributeContainer.Builder createAttributes() {
+        return MobEntity.createMobAttributes()
+                .add(EntityAttributes.GENERIC_MAX_HEALTH, 20.0)
+                .add(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE, 1.0);
     }
 
-
-    public void registerControllers(AnimatableManager.ControllerRegistrar animationData) {
-        /*animationData.add(new AnimationController<>(this, "fly",
-                0, this::predicate2)
-        );*/
+    // ─────────────────────────────────────────────────────────────────────────
+    // NBT persistence
+    // ─────────────────────────────────────────────────────────────────────────
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putInt("OwnerId",          dataTracker.get(OWNER_ID));
+        nbt.putInt("Phase",            dataTracker.get(PHASE));
+        nbt.putInt("PhaseTicks",       phaseTicks);
+        nbt.putInt("LifetimeTicks",    lifetimeTicks);
+        nbt.putInt("MaxLifetimeTicks", maxLifetimeTicks);
+        nbt.putFloat("ShockwaveDamage", shockwaveDamage);
+        nbt.putBoolean("DurationExpired", durationExpired);
     }
-    private <E extends GeoAnimatable> PlayState predicate2(AnimationState<E> event) {
-
-            return event.setAndContinue(SPINNING);
-    }
-    private AnimatableInstanceCache factory = AzureLibUtil.createInstanceCache(this);
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return this.factory;
-    }
-    public void setOwner(@Nullable Entity entity) {
-        if (entity != null) {
-            this.ownerUuid = entity.getId();
-            this.owner = entity;
-            this.dataTracker.set(OWNER,entity.getId());
-        }
-    }
-    @Nullable
-    public Entity getOwner() {
-        if(this.dataTracker.get(OWNER) != -1) {
-            return this.getWorld().getEntityById(this.dataTracker.get(OWNER));
-        }else{
-            return null;
-        }
-    }
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        nbt.putInt("Color", (Integer) this.dataTracker.get(COLOR));
-            nbt.putInt("Owner", this.ownerUuid);
-
-
-    }
     public void readCustomDataFromNbt(NbtCompound nbt) {
-        if (nbt.contains("Color")) {
-            this.dataTracker.set(COLOR, nbt.getInt("Color"));
-        }
-
-        if (nbt.containsUuid("Owner")) {
-            this.ownerUuid = nbt.getInt("Owner");
-            this.owner = null;
-        }
-
+        super.readCustomDataFromNbt(nbt);
+        if (nbt.contains("OwnerId"))          dataTracker.set(OWNER_ID, nbt.getInt("OwnerId"));
+        if (nbt.contains("Phase"))            dataTracker.set(PHASE,    nbt.getInt("Phase"));
+        if (nbt.contains("PhaseTicks"))       phaseTicks       = nbt.getInt("PhaseTicks");
+        if (nbt.contains("LifetimeTicks"))    lifetimeTicks    = nbt.getInt("LifetimeTicks");
+        if (nbt.contains("MaxLifetimeTicks")) maxLifetimeTicks = nbt.getInt("MaxLifetimeTicks");
+        if (nbt.contains("ShockwaveDamage"))  shockwaveDamage  = nbt.getFloat("ShockwaveDamage");
+        if (nbt.contains("DurationExpired"))  durationExpired  = nbt.getBoolean("DurationExpired");
     }
 }

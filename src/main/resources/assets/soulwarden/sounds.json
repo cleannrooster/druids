@@ -1,0 +1,20 @@
+{
+  "magic": {
+    "subtitle": "subtitles.soulwarden.magic",
+    "sounds": [
+      "soulwarden:magic"
+    ]
+  },
+  "ritual": {
+    "subtitle": "subtitles.soulwarden.ritual",
+    "sounds": [
+      "soulwarden:ritual"
+    ]
+  },
+  "ominous": {
+    "subtitle": "subtitles.soulwarden.ominous",
+    "sounds": [
+      "soulwarden:ominous"
+    ]
+  }
+}
