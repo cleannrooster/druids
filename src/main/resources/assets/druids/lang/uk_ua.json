@@ -1,0 +1,47 @@
+{
+  "itemGroup.druids.general": "Druids of Storm and Spirit",
+  "item.druids.shard_frost": "Уламок морозної душі",
+  "item.druids.shard_arcane": "Уламок арканної душі",
+  "item.druids.shard_fire": "Уламок вогняної душі",
+  "item.druids.shard_lightning": "Уламок душі блискавки",
+
+  "item.druids.aetherial_druid_spell_book": "Ефірна книга заклинань",
+  "item.druids.storm_druid_spell_book": "Книга заклинань Вольтової душі",
+  "item.druids.wand_lightning": "Жезл блискавки",
+  "item.druids.wand_netherite_lightning": "Незеритовий жезл блискавки",
+  "item.druids.staff_lightning": "Посох блискавки",
+  "item.druids.staff_netherite_lightning": "Незеритовий посох блискавки",
+  "item.druids.staff_crystal_lightning": "Кришталевий посох блискавки",
+
+  "item.druids.primalist_head": "Капюшон Праймаліста",
+  "item.druids.primalist_chest": "Перев'язь Праймаліста",
+  "item.druids.primalist_legs": "Пояс Праймаліста",
+  "item.druids.primalist_feet": "Черевики Праймаліста",
+  "effect.druids.eternalyouth": "Вічна молодість",
+  "effect.druids.cleansingfire": "Очищувальний вогонь",
+  "effect.druids.voltaic_burst": "Вольтовий вибух",
+
+  "spell.druids.chain.name": "Гальванічне зараження",
+  "spell.druids.chain.description": "{damage_1} Блискавка | {damage_2} Душа | {damage_3} Аркан. Це зараження нестабільною енергією швидко відскакує від цілей, поширюючись мов чума.",
+  "spell.druids.voltaic_burst.name": "Вольтовий вибух",
+  "spell.druids.voltaic_burst.description": "{damage_1} Блискавка | {damage_2} Душа | {damage_3} Аркан. Розроблене забутим магом, чиї амбіції завжди перевищували його можливості, це заклинання покладається на людську жагу до сили, дозволяючи користувачеві спустошувати все на своєму шляху, стаючи сильнішим з кожним кастом заклинання.",
+
+  "spell.druids.spiritbolts.name": "Стріли духу",
+  "spell.druids.spiritbolts.description": "До {damage_1} Душа, {damage_2} Мороз або {damage_3} Вогонь DPS. Базове заклинання окультистів, що трансформує або підсилює енергію душі та спрямовує її вперед багато разів на секунду.",
+  "spell.druids.stormcall.name": "Поклик шторму",
+  "spell.druids.stormcall.description": "{damage_1} Блискавка | {damage_2} Душа 4 рази на секунду. Одного разу під час посухи друїдам урвався терпець. Вони вирішили, що єдиний спосіб викликати дощ — змусити богів плакати.",
+  "spell.druids.soulflare.name": "Спалах душі",
+  "spell.druids.soulflare.description": "{damage_1} Душа 2 рази на секунду. Повідомляється, що супротивники, які потрапляли під дію цього заклинання, ніколи не поверталися; ймовірно, їх відкидало на багато миль.",
+  "spell.druids.tendrils.name": "Штормовий сплеск",
+  "spell.druids.tendrils.description": "Спрямовуйте (Channel), щоб вражати ворогів перед собою; шанс спрацьовування зменшується для кожного ворога, якщо їх понад 4 в зоні дії. Завдає 1.5x Блискавка та Аркан DPS.",
+  "spell.druids.lightningblast.name": "Кара душі",
+  "spell.druids.lightningblast.description": "{damage_1} Блискавка | {damage_2} Душа. Спрямуйте божественний гнів в одну точку, знищуючи все в найближчому радіусі.",
+  "spell.druids.galvanic_rite.name": "Шок душі",
+  "spell.druids.galvanic_rite.description": "Вдарте ворога арканною енергією, завдавши 0.45x Душа та Аркан, і отримайте 1 стак Сили блискавки на 10 секунд (максимум до 5 стаків).",
+  "spell.druids.maelstromtotem.name": "Тотем Мальстрему",
+  "spell.druids.maelstromtotem.description": "{damage_1} Душа | {damage_2} Мороз | {damage_3} Вогонь 4 рази на секунду. У вибраному вами місці з'являється втілення вічного Мальстрему, яке підкорює навколишню територію стихіям.",
+
+  "spell.druids.soulfirebastion.name": "Бастіон полум'я душі",
+  "spell.druids.soulfirebastion.description": "Кожен досвідчений маг знає, що одночасно можна надійно захистити або розум, або тіло. Питання лише — що саме і коли. (Баф-перемикач. Затисніть Shift під час касту, щоб зняти баф)."
+
+}
