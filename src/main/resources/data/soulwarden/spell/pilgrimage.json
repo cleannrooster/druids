@@ -4,17 +4,17 @@
   "tier": 4,
   "learn": {},
   "type": "ACTIVE",
-
   "active": {
     "cast": {
-      "animation": { "id": "spell_engine:two_handed_area_release" },
+      "animation": {
+        "id": "spell_engine:two_handed_area_release"
+      },
       "duration": 1.2
     }
   },
   "target": {
     "type": "AREA",
-    "area": {
-    }
+    "area": {}
   },
   "deliver": {
     "type": "CUSTOM",
@@ -28,16 +28,19 @@
       "randomness": 0.2,
       "volume": 0.5
     },
-    "particles": [
-      {
-        "particle_id": "sculk_soul",
-        "shape": "SPHERE",
-        "origin": "CASTER",
-        "count": 40,
-        "min_speed": 0.1,
-        "max_speed": 0.5
-      }
-    ]
+    "visuals": {
+      "particles": [
+        {
+          "id": "sculk_soul",
+          "batch": {
+            "count": 40,
+            "shape": "SPHERE",
+            "min_speed": 0.1,
+            "max_speed": 0.5
+          }
+        }
+      ]
+    }
   },
   "impacts": [],
   "cost": {

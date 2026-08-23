@@ -3,10 +3,11 @@
   "tier": 3,
   "learn": {},
   "type": "ACTIVE",
-
   "active": {
     "cast": {
-      "animation": { "id": "spell_engine:two_handed_channeling" },
+      "animation": {
+        "id": "spell_engine:two_handed_channeling"
+      },
       "duration": 0.75
     }
   },
@@ -20,16 +21,19 @@
     }
   },
   "release": {
-    "particles": [
-      {
-        "particle_id": "sculk_soul",
-        "shape": "SPHERE",
-        "origin": "CENTER",
-        "count": 8,
-        "min_speed": 0.05,
-        "max_speed": 0.2
-      }
-    ]
+    "visuals": {
+      "particles": [
+        {
+          "id": "sculk_soul",
+          "batch": {
+            "count": 8,
+            "shape": "SPHERE",
+            "min_speed": 0.05,
+            "max_speed": 0.2
+          }
+        }
+      ]
+    }
   },
   "cost": {
     "cooldown": {

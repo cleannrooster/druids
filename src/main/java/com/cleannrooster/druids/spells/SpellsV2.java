@@ -20,7 +20,6 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.spell_engine.api.spell.event.SpellHandlers;
-import net.spell_engine.internals.SpellHelper;
 import net.spell_power.api.SpellPower;
 import net.spell_power.api.SpellSchools;
 
@@ -85,8 +84,9 @@ public class SpellsV2 {
         registerCustomDelivery(Identifier.of(MODID, "guide"),
                 (world, spellEntry, caster, targets, context, velocity) -> {
                     if (!(world instanceof ServerWorld serverWorld)) return false;
+                    if (!(caster instanceof PlayerEntity player)) return false;
 
-                    SoulFragmentEntity nearest = findNearestFragment(serverWorld, caster, 8.0);
+                    SoulFragmentEntity nearest = findNearestFragment(serverWorld, player, 8.0);
                     if (nearest == null) return false;
 
                     Vec3d fragmentPos = nearest.getPos();
@@ -98,9 +98,9 @@ public class SpellsV2 {
                             20, 0.3, 0.3, 0.3, 0.08);
 
                     // Stack soul_power: amplifier 0 = +10%, 1 = +20%, ..., 9 = +100%
-                    StatusEffectInstance current = caster.getStatusEffect(DruidsEffects.SOUL_POWER);
+                    StatusEffectInstance current = player.getStatusEffect(DruidsEffects.SOUL_POWER);
                     int newAmplifier = current != null ? Math.min(current.getAmplifier() + 1, 9) : 0;
-                    caster.addStatusEffect(new StatusEffectInstance(
+                    player.addStatusEffect(new StatusEffectInstance(
                             DruidsEffects.SOUL_POWER,
                             20 * 20,      // 20 seconds
                             newAmplifier,
@@ -120,8 +120,9 @@ public class SpellsV2 {
         registerCustomDelivery(Identifier.of(MODID, "bind"),
                 (world, spellEntry, caster, targets, context, velocity) -> {
                     if (!(world instanceof ServerWorld serverWorld)) return false;
+                    if (!(caster instanceof PlayerEntity player)) return false;
 
-                    SoulFragmentEntity nearest = findNearestFragment(serverWorld, caster, 8.0);
+                    SoulFragmentEntity nearest = findNearestFragment(serverWorld, player, 8.0);
                     if (nearest == null) return false;
 
                     Vec3d spawnPos = nearest.getPos();
@@ -134,10 +135,10 @@ public class SpellsV2 {
 
                     // Spawn the bound soul at the fragment's location
                     BoundSoulEntity soul = new BoundSoulEntity(Druids.BOUND_SOUL, world);
-                    soul.refreshPositionAndAngles(spawnPos.x, spawnPos.y, spawnPos.z, caster.getYaw(), 0);
-                    soul.setOwner(caster);
+                    soul.refreshPositionAndAngles(spawnPos.x, spawnPos.y, spawnPos.z, player.getYaw(), 0);
+                    soul.setOwner(player);
                     soul.setTextureVariant(serverWorld.getRandom().nextInt(3));
-                    applyMinionScaling(soul, caster);
+                    applyMinionScaling(soul, player);
                     serverWorld.spawnEntity(soul);
 
                     return true;
@@ -153,15 +154,16 @@ public class SpellsV2 {
         registerCustomDelivery(Identifier.of(MODID, "pain_attunement"),
                 (world, spellEntry, caster, targets, context, velocity) -> {
                     if (!(world instanceof ServerWorld serverWorld)) return false;
+                    if (!(caster instanceof PlayerEntity player)) return false;
 
-                    // Cap damage so the player always survives with ≥0.5 HP
-                    float damage = Math.min(5.0f, caster.getHealth() - 0.5f);
+                    // Cap damage so the player always survives with â‰¥0.5 HP
+                    float damage = Math.min(5.0f, player.getHealth() - 0.5f);
                     if (damage <= 0) return false;
 
-                    caster.damage(caster.getDamageSources().magic(), damage);
+                    player.damage(player.getDamageSources().magic(), damage);
 
                     spawnFragmentAt(serverWorld,
-                            caster.getX(), caster.getY(), caster.getZ(), caster);
+                            player.getX(), player.getY(), player.getZ(), player);
 
                     return true;
                 });
@@ -177,11 +179,12 @@ public class SpellsV2 {
         registerCustomDelivery(Identifier.of(MODID, "pilgrimage"),
                 (world, spellEntry, caster, targets, context, velocity) -> {
                     if (!(world instanceof ServerWorld serverWorld)) return false;
+                    if (!(caster instanceof PlayerEntity player)) return false;
 
                     List<SoulFragmentEntity> fragments = serverWorld.getEntitiesByType(
                             Druids.SOUL_FRAGMENT,
-                            caster.getBoundingBox().expand(16.0),
-                            frag -> caster.equals(frag.getOwner())
+                            player.getBoundingBox().expand(16.0),
+                            frag -> player.equals(frag.getOwner())
                     );
 
                     if (fragments.isEmpty()) return false;
@@ -200,11 +203,11 @@ public class SpellsV2 {
                     int soulPowerTicks   = count * 3 * 20;  // 3s per fragment
 
                     // Regeneration 5 (amplifier 4 = Regen V)
-                    caster.addStatusEffect(new StatusEffectInstance(
+                    player.addStatusEffect(new StatusEffectInstance(
                             StatusEffects.REGENERATION, regenTicks, 4, false, true, true));
 
-                    // Soul Power (Pilgrimage) — +100% soul damage, flat
-                    caster.addStatusEffect(new StatusEffectInstance(
+                    // Soul Power (Pilgrimage) â€” +100% soul damage, flat
+                    player.addStatusEffect(new StatusEffectInstance(
                             DruidsEffects.SOUL_POWER_PILGRIMAGE, soulPowerTicks, 0, false, true, true));
 
                     return true;
@@ -214,20 +217,21 @@ public class SpellsV2 {
     // -------------------------------------------------------------------------
     // Ancestral Guardian
     // At most ONE guardian per player is allowed.
-    // • If no guardian exists → spawn one.
-    // • If one already exists → teleport it back to the caster and reset its
+    // â€¢ If no guardian exists â†’ spawn one.
+    // â€¢ If one already exists â†’ teleport it back to the caster and reset its
     //   lifespan timer, so the spell acts as a "recall" when needed.
     // -------------------------------------------------------------------------
     private static void registerAncestralGuardian() {
         registerCustomDelivery(Identifier.of(MODID, "ancestral_guardian"),
                 (world, spellEntry, caster, targets, context, velocity) -> {
                     if (!(world instanceof ServerWorld serverWorld)) return false;
+                    if (!(caster instanceof PlayerEntity player)) return false;
 
-                    // Search generously — the guardian may have strayed while fighting
+                    // Search generously â€” the guardian may have strayed while fighting
                     List<AncestralGuardianEntity> existing = serverWorld.getEntitiesByType(
                             Druids.ANCESTRAL_GUARDIAN,
-                            caster.getBoundingBox().expand(256.0),
-                            g -> caster.equals(g.getOwner())
+                            player.getBoundingBox().expand(256.0),
+                            g -> player.equals(g.getOwner())
                     );
 
                     if (!existing.isEmpty()) {
@@ -239,26 +243,26 @@ public class SpellsV2 {
                                 25, 0.5, 0.5, 0.5, 0.1);
 
                         // Teleport to caster, clear AI state, reset lifespan
-                        guardian.teleport(caster.getX(), caster.getY(), caster.getZ(),true);
+                        guardian.teleport(player.getX(), player.getY(), player.getZ(),true);
                         guardian.getNavigation().stop();
                         guardian.setTarget(null);
                         guardian.age = 0;
 
                         // Arrival burst at new position
                         serverWorld.spawnParticles(ParticleTypes.SCULK_SOUL,
-                                caster.getX(), caster.getY() + 0.5, caster.getZ(),
+                                player.getX(), player.getY() + 0.5, player.getZ(),
                                 25, 0.5, 0.5, 0.5, 0.1);
 
                         return true;
                     }
 
-                    // No existing guardian — spawn a fresh one
+                    // No existing guardian â€” spawn a fresh one
                     AncestralGuardianEntity guardian =
                             new AncestralGuardianEntity(Druids.ANCESTRAL_GUARDIAN, world);
                     guardian.refreshPositionAndAngles(
-                            caster.getX(), caster.getY(), caster.getZ(), caster.getYaw(), 0);
-                    guardian.setOwner(caster);
-                    applyMinionScaling(guardian, caster);
+                            player.getX(), player.getY(), player.getZ(), player.getYaw(), 0);
+                    guardian.setOwner(player);
+                    applyMinionScaling(guardian, player);
                     serverWorld.spawnEntity(guardian);
 
                     return true;
@@ -271,7 +275,7 @@ public class SpellsV2 {
 
     // -------------------------------------------------------------------------
     // Ancestral Totem
-    // Raycasts from the player's eyes (2× default block reach) to find a
+    // Raycasts from the player's eyes (2Ã— default block reach) to find a
     // placement surface, then spawns a TotemEntity there.  Stats (health,
     // duration) scale with the caster's soul attribute; shockwave damage
     // mirrors the caster's current melee attack damage.
@@ -280,10 +284,11 @@ public class SpellsV2 {
         registerCustomDelivery(Identifier.of(MODID, "ancestral_totem"),
                 (world, spellEntry, caster, targets, context, velocity) -> {
                     if (!(world instanceof ServerWorld serverWorld)) return false;
+                    if (!(caster instanceof PlayerEntity player)) return false;
 
-                    // 2× the default 4.5-block interaction reach ≈ 9 blocks
+                    // 2Ã— the default 4.5-block interaction reach â‰ˆ 9 blocks
                     final double REACH = 9.0;
-                    HitResult hit = caster.raycast(REACH, 0.0f, false);
+                    HitResult hit = player.raycast(REACH, 0.0f, false);
 
                     // Resolve a spawn position on the surface the player is aiming at.
                     // If the ray hits a block, place the totem on the struck face.
@@ -291,7 +296,7 @@ public class SpellsV2 {
                     Vec3d spawnPos;
                     if (hit instanceof BlockHitResult blockHit) {
                         var placeBlock = blockHit.getBlockPos().offset(blockHit.getSide());
-                        // ofCenter gives (x+0.5, y+0.5, z+0.5); -0.5 Y → bottom of that block
+                        // ofCenter gives (x+0.5, y+0.5, z+0.5); -0.5 Y â†’ bottom of that block
                         spawnPos = Vec3d.ofCenter(placeBlock).add(0, -0.5, 0);
                     } else {
                         spawnPos = hit.getPos();
@@ -299,9 +304,9 @@ public class SpellsV2 {
 
                     TotemEntity totem = new TotemEntity(Druids.SUMMON_TOTEM, world);
                     totem.refreshPositionAndAngles(
-                            spawnPos.x, spawnPos.y, spawnPos.z, caster.getYaw(), 0);
-                    totem.setOwner(caster);
-                    totem.initializeForCaster(caster);
+                            spawnPos.x, spawnPos.y, spawnPos.z, player.getYaw(), 0);
+                    totem.setOwner(player);
+                    totem.initializeForCaster(player);
                     serverWorld.spawnEntity(totem);
 
                     // Summon burst at the placement point
@@ -315,14 +320,14 @@ public class SpellsV2 {
 
     /**
      * Scales a freshly-created minion's health and attack damage by the caster's
-     * Soul Power stacks.  8 stacks → +100% (i.e. 2× base).  Must be called
+     * Soul Power stacks.  8 stacks â†’ +100% (i.e. 2Ã— base).  Must be called
      * BEFORE {@code spawnEntity} so the entity enters the world with correct HP.
      *
      * Formula: multiplier = 1 + (amplifier + 1) / 8
-     *   - no Soul Power   (amplifier −1) → ×1.00  (no change)
-     *   - 1 stack         (amplifier  0) → ×1.125
-     *   - 4 stacks        (amplifier  3) → ×1.50
-     *   - 8 stacks        (amplifier  7) → ×2.00
+     *   - no Soul Power   (amplifier âˆ’1) â†’ Ã—1.00  (no change)
+     *   - 1 stack         (amplifier  0) â†’ Ã—1.125
+     *   - 4 stacks        (amplifier  3) â†’ Ã—1.50
+     *   - 8 stacks        (amplifier  7) â†’ Ã—2.00
      */
     private static void applyMinionScaling(PathAwareEntity minion, PlayerEntity caster) {
         var soulPower = SpellPower.getSpellPower(SpellSchools.SOUL,caster);

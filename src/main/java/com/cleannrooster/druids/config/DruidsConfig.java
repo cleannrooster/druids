@@ -1,7 +1,7 @@
 package com.cleannrooster.druids.config;
 
-import net.spell_engine.api.config.ArmorSetConfig;
-import net.spell_engine.api.config.WeaponConfig;
+import net.spell_engine.rpg_series.config.ArmorSetConfig;
+import net.spell_engine.rpg_series.config.WeaponConfig;
 
 import java.util.HashMap;
 import java.util.Map;

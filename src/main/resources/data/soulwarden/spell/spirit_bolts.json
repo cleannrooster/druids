@@ -4,12 +4,16 @@
   "tier": 1,
   "learn": {},
   "type": "ACTIVE",
-
   "active": {
     "cast": {
-      "animation": { "id":"spell_engine:two_handed_channeling"},
+      "animation": {
+        "id": "spell_engine:two_handed_channeling"
+      },
       "duration": 8.0,
-      "channel_ticks": 32
+      "type": "CHANNEL",
+      "channel": {
+        "ticks": 32
+      }
     }
   },
   "target": {
@@ -41,17 +45,23 @@
         "client_data": {
           "travel_particles": [
             {
-              "particle_id": "sculk_soul",
-              "shape": "SPHERE",
-              "origin": "CENTER",
-              "count": 1,
-              "min_speed": 0.05,
-              "max_speed": 0.15
+              "id": "sculk_soul",
+              "batch": {
+                "shape": "SPHERE",
+                "min_speed": 0.05,
+                "max_speed": 0.15
+              }
             }
           ],
-          "model": {
-            "model_id": "soulwarden:spell_projectile/necrospirit",
-            "scale": 0.25
+          "composite_model": {
+            "models": [
+              {
+                "fx": {
+                  "model_id": "soulwarden:spell_projectile/necrospirit",
+                  "scale": 0.25
+                }
+              }
+            ]
           }
         }
       }
@@ -62,16 +72,19 @@
       "id": "soulwarden:magic",
       "randomness": 0.2
     },
-    "particles": [
-      {
-        "particle_id": "sculk_soul",
-        "shape": "CIRCLE",
-        "origin": "CASTER",
-        "count": 4,
-        "min_speed": 0.05,
-        "max_speed": 0.15
-      }
-    ]
+    "visuals": {
+      "particles": [
+        {
+          "id": "sculk_soul",
+          "batch": {
+            "count": 4,
+            "shape": "CIRCLE",
+            "min_speed": 0.05,
+            "max_speed": 0.15
+          }
+        }
+      ]
+    }
   },
   "impacts": [
     {
@@ -82,19 +95,22 @@
           "spell_power_coefficient": 0.8
         }
       },
-      "particles": [
-        {
-          "particle_id": "sculk_soul",
-          "shape": "SPHERE",
-          "origin": "CENTER",
-          "count": 4,
-          "min_speed": 0.05,
-          "max_speed": 0.15
-        }
-      ],
       "sound": {
         "id": "entity.player.hurt",
         "randomness": 0.3
+      },
+      "visuals": {
+        "particles": [
+          {
+            "id": "sculk_soul",
+            "batch": {
+              "count": 4,
+              "shape": "SPHERE",
+              "min_speed": 0.05,
+              "max_speed": 0.15
+            }
+          }
+        ]
       }
     },
     {
@@ -105,19 +121,22 @@
           "intent": "HARMFUL"
         }
       },
-      "particles": [
-        {
-          "particle_id": "sculk_soul",
-          "shape": "SPHERE",
-          "origin": "CENTER",
-          "count": 4,
-          "min_speed": 0.05,
-          "max_speed": 0.15
-        }
-      ],
       "sound": {
         "id": "entity.player.hurt",
         "randomness": 0.3
+      },
+      "visuals": {
+        "particles": [
+          {
+            "id": "sculk_soul",
+            "batch": {
+              "count": 4,
+              "shape": "SPHERE",
+              "min_speed": 0.05,
+              "max_speed": 0.15
+            }
+          }
+        ]
       }
     }
   ],

@@ -11,8 +11,8 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
-import net.spell_engine.api.config.ArmorSetConfig;
-import net.spell_engine.api.config.AttributeModifier;
+import net.spell_engine.rpg_series.config.ArmorSetConfig;
+import net.spell_engine.rpg_series.config.AttributeModifier;
 import net.spell_engine.rpg_series.item.Armor;
 import net.spell_engine.rpg_series.item.Equipment;
 import net.spell_power.api.SpellPower;
@@ -106,27 +106,19 @@ public class Armors {
             ArmorSetConfig.with(
                     new ArmorSetConfig.Piece(3)
                             .addAll(List.of(
-                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F),
-                                    AttributeModifier.multiply(SpellSchools.SOUL.id, 0.1F)
-
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 2.0F)
 
 
                             )),
                     new ArmorSetConfig.Piece(6)
                             .addAll(List.of(
-                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F),
-                                    AttributeModifier.multiply(SpellSchools.SOUL.id, 0.1F)
-                            )),
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 2.0F))),
                     new ArmorSetConfig.Piece(5)
                             .addAll(List.of(
-                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F),
-                                    AttributeModifier.multiply(SpellSchools.SOUL.id, 0.1F)
-                            )),
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 2.0F))),
                     new ArmorSetConfig.Piece(2)
                             .addAll(List.of(
-                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 1.0F),
-                                    AttributeModifier.multiply(SpellSchools.SOUL.id, 0.1F)
-                            ))
+                                    AttributeModifier.bonus(SpellSchools.SOUL.id, 2.0F)))
             ),3)
             .armorSet();
 

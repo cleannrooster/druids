@@ -23,7 +23,7 @@ import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.spell_engine.api.config.ConfigFile;
+import net.spell_engine.rpg_series.config.ConfigFile;
 import net.spell_engine.api.render.CustomModels;
 import net.tiny_config.ConfigManager;
 import org.slf4j.Logger;
